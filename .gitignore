@@ -1,0 +1,66 @@
+# Compiled Object files, Static and Dynamic libraries (Unix-like)
+*.o
+*.a
+*.so
+
+# Output of the go coverage tool
+*.out
+
+# Compiled source code
+*.test
+
+# Compiled Go binary
+*.exe
+
+# Log files
+*.log
+
+# Binary file for tests
+/_testmain.go
+
+# Output directory
+/_test/
+/test_output.txt
+
+# Binary files (Windows)
+*.exe
+*.com
+*.dll
+*.bin
+*.o
+*.a
+*.lib
+
+# Dependency directories (common dependencies)
+/vendor/
+/Godeps/
+
+# Environment variables file
+.env
+
+# OS trash
+.DS_Store
+.thumbnails
+thumbs.db
+
+# JetBrains GoLand files
+.idea/
+
+# Visual Studio Code settings
+.vscode/
+
+# Compiled Go files
+*.test
+*.prof
+*.cover
+
+# End of Visual Studio Code settings
+.idea/
+
+# SQLite files
+*.db
+*.db-shm
+*.db-wal
+
+# Application configuration file
+config.yaml
