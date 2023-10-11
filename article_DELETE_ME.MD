@@ -19,15 +19,25 @@ cd src/app
 docker stop gobox; docker rm gobox;
 docker start gobox; docker exec -it gobox bash;
 
+# Make your files from your local machine, not from inside the container, or you won't have permissions to edit them. Otherwise run
 sudo chown -R 1000:1000 ./app
 
-
-go mod init calc;
+go install goa.design/goa/v3/cmd/goa@v3;
 go install google.golang.org/protobuf/cmd/protoc-gen-go@latest;
 go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest;
+
+# download https://github.com/protocolbuffers/protobuf/releases/download/v24.4/protoc-24.4-linux-x86_64.zip from https://github.com/protocolbuffers/protobuf/releases
+# unzip and paste bin/protoc exe file into ./app/lib
+export PATH=$PATH:/go/src/app/lib # can't use relative path here
+
+go mod init calc;
+mkdir design; # in ide so permissions ok
+# make file design/design.go
+# paste code
+goa gen calc/design
 ```
 
-Make your files from your local machine, not from inside the container, or you won't have permissions to edit them.
+
 
 ## Brief
 briefly introducing it and summarizing how it differs from
