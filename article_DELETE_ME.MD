@@ -12,7 +12,19 @@ write go code in goa -> goa.design makes openapi spec, goa.example makes code st
 ```bash
 cd ~/code/speakeasy-goa-example
 mkdir app
-docker run --name gobox -v ./app:/go/src/app -it golang:1.21.2 bash
+id
+docker run --name gobox -u 1000:0 -v ./app:/go/src/app -it golang:1.21.2 bash
+cd src/app
+
+docker stop gobox; docker rm gobox;
+docker start gobox; docker exec -it gobox bash;
+
+sudo chown -R 1000:1000 ./app
+
+
+go mod init calc;
+go install google.golang.org/protobuf/cmd/protoc-gen-go@latest;
+go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest;
 ```
 
 Make your files from your local machine, not from inside the container, or you won't have permissions to edit them.
