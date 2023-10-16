@@ -1,5 +1,6 @@
 ## Todo
 - use models instead of plain datatypes
+- review https://github.com/speakeasy-api/speakeasy
 - https://github.com/goadesign/goa/issues/3390
   - Include link to - https://invite.slack.golangbridge.org/
   - Register for the group at https://invite.slack.golangbridge.org/.
@@ -150,6 +151,10 @@ Remember to give yourself permissions to the files on your host machine again.
 ```bash
 sudo chown -R 1000:1000 ./app;
 ```
+
+validate your schema
+
+
 
 ### Retries
 https://www.speakeasyapi.dev/docs/customize-sdks/retries
