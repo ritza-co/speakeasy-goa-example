@@ -1,0 +1,15 @@
+configVersion: 1.0.0
+generation:
+  sdkClassName: SDK
+  singleTagPerOp: false
+features:
+  typescript:
+    core: 2.90.4
+    globalServerURLs: 2.82.0
+typescript:
+  version: 0.0.1
+  author: Speakeasy
+  clientServerStatusCodesAsErrors: true
+  flattenGlobalSecurity: true
+  maxMethodParams: 0
+  packageName: openapi

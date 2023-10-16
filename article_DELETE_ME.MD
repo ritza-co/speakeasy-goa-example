@@ -14,6 +14,8 @@ write go code in goa -> goa.design makes openapi spec, goa.example makes code st
 ## Prerequisites
 Docker, version 20 or greater.
 
+Speakeasy is an online-only service. Please register before continuing this tutorial: https://app.speakeasyapi.dev. Once you've registered, create a workspace with named `club`. Browse to API keys. Click `New Api Key`. Name it `club`. Copy and save the key content to use later.
+
 ## Goa
 
 ### Introduction
@@ -121,6 +123,11 @@ Now Speakeasy installed. Test it by running:
 speakeasy help;
 ```
 
+Now add you API key that you saved earlier when registering with Speakeasy.
+```
+export SPEAKEASY_API_KEY=your_api_key_here
+```
+
 <Aside>
 If you exit the container and want to return to it later, run:
 ```bash
@@ -133,18 +140,15 @@ You now have `app/gen/http/openapi3.yaml` and Speakeasy. So you can build the SD
 
 ```bash
 speakeasy generate sdk \
-    --schema build/swagger.json \
+    --schema /app/gen/http/openapi3.yaml \
     --lang typescript \
-    --out ./sdk
+    --out /app/sdk
 ```
 
-Use the extracted openapi.json or openapi.yaml with Speakeasy CLI to generate an SDK in either (their preference) TypeScript and Go.
+Remember to give yourself permissions to the files on your host machine again.
 
 ```bash
-speakeasy generate sdk \
-    --schema build/swagger.json \
-    --lang typescript \
-    --out ./sdk
+sudo chown -R 1000:1000 ./app;
 ```
 
 ### Retries
