@@ -1,43 +1,18 @@
+## Todo
 - make example app
-    - :heavy_check_mark: connect go docker container to local volume and check you can build hello world
+    - DONE connect go docker container to local volume and check you can build hello world
     - make basic goa demo app
     - change it to a club with tea and coffee
     - build it with speakeasy
 
+https://github.com/goadesign/goa/issues/3390
 
+
+Gophers / Goa slack group  https://app.slack.com/client/T029RQSE6/C0FK8EV28
 
 write go code in goa -> goa.design makes openapi spec, goa.example makes code stubs you complete to actually make the backend do stuff -> put openapi spec in speakeasy -> generates sdks in all languages
 
-
-```bash
-cd ~/code/speakeasy-goa-example
-mkdir app
-id
-docker run --name gobox -u 1000:0 -v ./app:/go/src/app -it golang:1.21.2 bash
-cd src/app
-
-docker stop gobox; docker rm gobox;
-docker start gobox; docker exec -it gobox bash;
-
-# Make your files from your local machine, not from inside the container, or you won't have permissions to edit them. Otherwise run
-sudo chown -R 1000:1000 ./app
-
-go install goa.design/goa/v3/cmd/goa@v3;
-go install google.golang.org/protobuf/cmd/protoc-gen-go@latest;
-go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest;
-
-# download https://github.com/protocolbuffers/protobuf/releases/download/v24.4/protoc-24.4-linux-x86_64.zip from https://github.com/protocolbuffers/protobuf/releases
-# unzip and paste bin/protoc exe file into ./app/lib
-export PATH=$PATH:/go/src/app/lib # can't use relative path here
-
-go mod init calc;
-mkdir design; # in ide so permissions ok
-# make file design/design.go
-# paste code
-goa gen calc/design
-```
-
-
+add pull request to getting started article.
 
 ## Brief
 briefly introducing it and summarizing how it differs from
@@ -67,3 +42,52 @@ The workflow I've been following is to find the most popular method of extractin
 Speakeasy provided the attached example schema as a "theme" for these guides, but we don't recreate the entire schema for each guide.
 Speakeasy supports OpenAPI 2 and 3, but much prefer 3+.
 https://www.speakeasyapi.dev/docs/customize-sdks/retries
+
+other golang API packages:
+- https://stackoverflow.com/questions/66171424/how-to-generate-openapi-v3-specification-from-go-source-code
+- https://github.com/swaggest/rest/
+- https://github.com/deepmap/oapi-codegen
+- https://github.com/ogen-go/ogen
+- https://github.com/swaggest/openapi-go
+
+# The article
+
+## Create the API specification in Goa
+
+
+Now build it, using a Go container.
+
+```bash
+cd ~/code/speakeasy-goa-example;
+mkdir app;
+docker stop gobox; docker rm gobox;
+docker run --name gobox -v ./app:/go/src/app -it golang:1.21.2 bash
+cd src/app;
+go mod init app;
+go install goa.design/goa/v3/cmd/goa@v3;
+go install google.golang.org/protobuf/cmd/protoc-gen-go@latest;
+go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest;
+
+# download https://github.com/protocolbuffers/protobuf/releases/download/v24.4/protoc-24.4-linux-x86_64.zip from https://github.com/protocolbuffers/protobuf/releases
+# unzip and paste bin/protoc exe file into ./app/lib
+export PATH=$PATH:/go/src/app/lib # can't use relative path here
+```
+
+On subsequent runs, you can start the container instead of rebuilding it:
+
+```bash
+docker start gobox; docker exec -it gobox bash;
+```
+
+Write the API specification in `app/design/design.go`.
+
+```bash
+goa gen app/design
+```
+
+In your host machine terminal, not in the container terminal, give yourself permissions to edit the created files. Rerun this whenever you create a file in the container.
+
+```bash
+sudo chown -R 1000:1000 ./app;
+```
+

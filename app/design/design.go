@@ -4,36 +4,54 @@ import (
 	. "goa.design/goa/v3/dsl"
 )
 
-var _ = API("calc", func() {
-	Title("Calculator Service")
-	Description("Service for multiplying numbers, a Goa teaser")
-    Server("calc", func() {
+var _ = API("club", func() {
+	Title("The Club")
+	Description("A club that serves tea and plays jazz. A Goa and Speakeasy example.")
+    Server("club", func() {
         Host("localhost", func() {
-            URI("http://localhost:8000")
-            URI("grpc://localhost:8080")
+            URI("http://localhost:51000")
+            URI("grpc://localhost:52000")
         })
     })
 })
 
-var _ = Service("calc", func() {
-	Description("The calc service performs operations on numbers.")
-
-	Method("multiply", func() {
+var _ = Service("order", func() {
+	Description("A waiter that brings drinks.")
+	Method("tea", func() {
+		Description("Order a cup of tea.")
 		Payload(func() {
-			Field(1, "a", Int, "Left operand")
-			Field(2, "b", Int, "Right operand")
-			Required("a", "b")
+			Field(1, "isGreen", Boolean, "Whether to have green tea instead of normal.")
+			Field(2, "numberSugars", Int, "Number of spoons of sugar.")
+			Field(3, "includeMilk", Boolean, "Whether to have milk.")
 		})
-
-		Result(Int)
-
+		Result(String)
 		HTTP(func() {
-			GET("/multiply/{a}/{b}")
+			GET("/tea")
 		})
-
 		GRPC(func() {
 		})
 	})
-
 	Files("/openapi.json", "./gen/http/openapi.json")
 })
+
+var _ = Service("band", func() {
+	Description("A band that plays jazz.")
+	Method("play", func() {
+		Description("Choose your jazz style.")
+		Payload(func() {
+			Attribute("style", String, "Style of music to play", func() {
+				Enum("Bebop", "Swing")
+				Meta("rpc:tag", "1")
+			})
+			Required("style")
+		})
+		Result(Empty)
+		HTTP(func() {
+			POST("/play")
+		})
+		GRPC(func() {
+		})
+	})
+	Files("/openapi.json", "./gen/http/openapi.json")
+})
+
