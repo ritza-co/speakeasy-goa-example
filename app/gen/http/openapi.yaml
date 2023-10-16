@@ -1,9 +1,9 @@
 swagger: "2.0"
 info:
-    title: Calculator Service
-    description: Service for multiplying numbers, a Goa teaser
+    title: The Club
+    description: A club that serves tea and plays jazz. A Goa and Speakeasy example.
     version: ""
-host: localhost:8000
+host: localhost:51000
 consumes:
     - application/json
     - application/xml
@@ -13,37 +13,12 @@ produces:
     - application/xml
     - application/gob
 paths:
-    /multiply/{a}/{b}:
-        get:
-            tags:
-                - calc
-            summary: multiply calc
-            operationId: calc#multiply
-            parameters:
-                - name: a
-                  in: path
-                  description: Left operand
-                  required: true
-                  type: integer
-                - name: b
-                  in: path
-                  description: Right operand
-                  required: true
-                  type: integer
-            responses:
-                "200":
-                    description: OK response.
-                    schema:
-                        type: integer
-                        format: int64
-            schemes:
-                - http
     /openapi.json:
         get:
             tags:
-                - calc
+                - band
             summary: Download ./gen/http/openapi.json
-            operationId: calc#/openapi.json
+            operationId: band#/openapi.json
             responses:
                 "200":
                     description: File downloaded
@@ -51,3 +26,80 @@ paths:
                         type: file
             schemes:
                 - http
+    /play:
+        post:
+            tags:
+                - band
+            summary: play band
+            description: Choose your jazz style.
+            operationId: band#play
+            parameters:
+                - name: PlayRequestBody
+                  in: body
+                  required: true
+                  schema:
+                    $ref: '#/definitions/BandPlayRequestBody'
+                    required:
+                        - style
+            responses:
+                "204":
+                    description: No Content response.
+            schemes:
+                - http
+    /tea:
+        get:
+            tags:
+                - order
+            summary: tea order
+            description: Order a cup of tea.
+            operationId: order#tea
+            parameters:
+                - name: TeaRequestBody
+                  in: body
+                  required: true
+                  schema:
+                    $ref: '#/definitions/OrderTeaRequestBody'
+            responses:
+                "200":
+                    description: OK response.
+                    schema:
+                        type: string
+            schemes:
+                - http
+definitions:
+    BandPlayRequestBody:
+        title: BandPlayRequestBody
+        type: object
+        properties:
+            style:
+                type: string
+                description: Style of music to play
+                example: Swing
+                enum:
+                    - Bebop
+                    - Swing
+        example:
+            style: Swing
+        required:
+            - style
+    OrderTeaRequestBody:
+        title: OrderTeaRequestBody
+        type: object
+        properties:
+            includeMilk:
+                type: boolean
+                description: Whether to have milk.
+                example: true
+            isGreen:
+                type: boolean
+                description: Whether to have green tea instead of normal.
+                example: false
+            numberSugars:
+                type: integer
+                description: Number of spoons of sugar.
+                example: 3575711038161794215
+                format: int64
+        example:
+            includeMilk: false
+            isGreen: false
+            numberSugars: 2987982917248960936

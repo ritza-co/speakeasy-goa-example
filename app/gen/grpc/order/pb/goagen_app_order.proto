@@ -1,0 +1,31 @@
+// Code generated with goa v3.13.2, DO NOT EDIT.
+//
+// order protocol buffer definition
+//
+// Command:
+// $ goa gen app/design
+
+syntax = "proto3";
+
+package order;
+
+option go_package = "/orderpb";
+
+// A waiter that brings drinks.
+service Order {
+	// Order a cup of tea.
+	rpc Tea (TeaRequest) returns (TeaResponse);
+}
+
+message TeaRequest {
+	// Whether to have green tea instead of normal.
+	optional bool is_green = 1;
+	// Number of spoons of sugar.
+	optional sint32 number_sugars = 2;
+	// Whether to have milk.
+	optional bool include_milk = 3;
+}
+
+message TeaResponse {
+	string field = 1;
+}
