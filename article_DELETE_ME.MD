@@ -82,7 +82,8 @@ docker start gobox; docker exec -it gobox bash;
 Write the API specification in `app/design/design.go`.
 
 ```bash
-goa gen app/design
+goa gen app/design;
+goa example app/design;
 ```
 
 In your host machine terminal, not in the container terminal, give yourself permissions to edit the created files. Rerun this whenever you create a file in the container.
@@ -90,4 +91,26 @@ In your host machine terminal, not in the container terminal, give yourself perm
 ```bash
 sudo chown -R 1000:1000 ./app;
 ```
+
+In `order.go` set: `return "A nice cup of tea", nil`
+
+Compile it in the container.
+```bash
+go get app/cmd/club; # download dependencies
+go build ./cmd/club && go build ./cmd/club-cli;
+```
+
+Since Go compiles to executables, you can now run the Club server in your physical machine.
+```bash
+./club
+```
+
+In another terminal
+```bash
+./club-cli --help
+./club-cli order tea --body '{"includeMilk": false, "isGreen": false, "numberSugars": 1 }'
+# A nice cup of tea
+```
+
+
 

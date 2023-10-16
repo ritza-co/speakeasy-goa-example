@@ -64,3 +64,5 @@ thumbs.db
 
 # Application configuration file
 config.yaml
+app/club
+app/club-cli
