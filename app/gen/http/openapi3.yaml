@@ -2,7 +2,7 @@ openapi: 3.0.3
 info:
     title: The Club
     description: A club that serves tea and plays jazz. A Goa and Speakeasy example.
-    version: "1.0"
+    version: 1.0.0
 servers:
     - url: http://localhost:51000
 paths:

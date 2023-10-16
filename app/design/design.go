@@ -7,6 +7,7 @@ import (
 var _ = API("club", func() {
 	Title("The Club")
 	Description("A club that serves tea and plays jazz. A Goa and Speakeasy example.")
+	Version("1.0.0")
     Server("club", func() {
         Host("localhost", func() {
             URI("http://localhost:51000")
