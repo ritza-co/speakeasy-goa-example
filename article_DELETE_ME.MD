@@ -1,4 +1,5 @@
 ## Todo
+- use models instead of plain datatypes
 - https://github.com/goadesign/goa/issues/3390
   - Include link to - https://invite.slack.golangbridge.org/
   - Register for the group at https://invite.slack.golangbridge.org/.
@@ -9,6 +10,9 @@
 
 ## Introduction
 write go code in goa -> goa.design makes openapi spec, goa.example makes code stubs you complete to actually make the backend do stuff -> put openapi spec in speakeasy -> generates sdks in all languages
+
+## Prerequisites
+Docker, version 20 or greater.
 
 ## Goa
 
@@ -46,7 +50,7 @@ Use the Go Slack group to ask for help with Goa.
 cd ~/code/speakeasy-goa-example;
 mkdir app;
 docker stop gobox; docker rm gobox;
-docker run --name gobox -v ./app:/go/src/app -it golang:1.21.2 bash
+docker run --name gobox -v ./app:/go/src/app -it golang:1.21.2 bash;
 cd src/app;
 go mod init app;
 go install goa.design/goa/v3/cmd/goa@v3;
@@ -97,9 +101,31 @@ In another terminal
  ./club-cli band play --body '{"style": "Bebop" }' # No response
 ```
 
-## Create the API with SpeakEasy
+## Create the API with Speakeasy
 
-Use the extracted openapi.json or openapi.yaml with Speakeasy CLI to generate an SDK in either (their preference) TypeScript or Python.
+Speakeasy supports these languages: [C#, Go, Java, PHP, Python, Ruby, Swift, Typescript](https://www.speakeasyapi.dev/docs/create-client-sdks#language-support).
+
+## Set up the Speakeasy CLI
+The CLI is the simplest way to use Speakeasy. You can install it directly by following the instructions in the [readme](https://github.com/speakeasy-api/speakeasy). This tutorial uses the CLI from Docker to make all instructions as reproducible as possible.
+
+```bash
+docker stop speakbox; docker rm speakbox;
+docker run --name speakbox -v ./app:/app -it ubuntu:22.04 bash;
+#docker start speakbox; docker exec -it speakbox sh;
+apt update;
+apt install curl -y;
+curl -fsSL https://raw.githubusercontent.com/speakeasy-api/speakeasy/main/install.sh | sh;
+```
+
+## Build an SDK
+Use the extracted openapi.json or openapi.yaml with Speakeasy CLI to generate an SDK in either (their preference) TypeScript and Go.
+
+```bash
+speakeasy generate sdk \
+    --schema build/swagger.json \
+    --lang typescript \
+    --out ./sdk
+```
 
 ### Retries
 https://www.speakeasyapi.dev/docs/customize-sdks/retries
