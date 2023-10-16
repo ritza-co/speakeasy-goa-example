@@ -110,15 +110,15 @@ The CLI is the simplest way to use Speakeasy. You can install it directly by fol
 
 ```bash
 docker stop speakbox; docker rm speakbox;
-docker run --name speakbox -v ./app:/app -it ubuntu:22.04 bash;
-apt update; apt install curl unzip sudo -y;
+docker run --name speakbox -v ./app:/app -it alpine:3.18.4 sh; # docker run --name speakbox -v ./app:/app -it ubuntu:22.04 bash;
+apk add curl unzip sudo; # apt update; apt install curl unzip sudo -y;
 curl -fsSL https://raw.githubusercontent.com/speakeasy-api/speakeasy/main/install.sh | sh;
 ```
 
 Now Speakeasy installed. Test it by running:
 
 ```bash
-speakeasy help
+speakeasy help;
 ```
 
 <Aside>
@@ -129,6 +129,15 @@ docker start speakbox; docker exec -it speakbox sh;
 </Aside>
 
 ## Build an SDK
+You now have `app/gen/http/openapi3.yaml` and Speakeasy. So you can build the SDK. In the speakbox container you started in the last section, run:
+
+```bash
+speakeasy generate sdk \
+    --schema build/swagger.json \
+    --lang typescript \
+    --out ./sdk
+```
+
 Use the extracted openapi.json or openapi.yaml with Speakeasy CLI to generate an SDK in either (their preference) TypeScript and Go.
 
 ```bash
