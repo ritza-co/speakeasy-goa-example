@@ -108,8 +108,8 @@ Since Go compiles to executables, you can now run the Club server in your physic
 In another terminal
 ```bash
 ./club-cli --help
-./club-cli order tea --body '{"includeMilk": false, "isGreen": false, "numberSugars": 1 }'
-# A nice cup of tea
+./club-cli order tea --body '{"includeMilk": false, "isGreen": false, "numberSugars": 1 }' # A nice cup of tea
+ ./club-cli band play --body '{"style": "Bebop" }' # No response
 ```
 
 
