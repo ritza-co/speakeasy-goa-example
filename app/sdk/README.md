@@ -5,15 +5,15 @@
 </div>
 
 <!-- Start SDK Installation -->
-# SDK Installation
+## SDK Installation
 
-## NPM
+### NPM
 
 ```bash
 npm add <UNSET>
 ```
 
-## Yarn
+### Yarn
 
 ```bash
 yarn add <UNSET>
@@ -22,8 +22,6 @@ yarn add <UNSET>
 
 ## SDK Example Usage
 <!-- Start SDK Example Usage -->
-
-
 ```typescript
 import { SDK } from "openapi";
 
@@ -41,18 +39,16 @@ import { SDK } from "openapi";
 <!-- End SDK Example Usage -->
 
 <!-- Start SDK Available Operations -->
-# Available Resources and Operations
+## Available Resources and Operations
 
 
-## [band](docs/sdks/band/README.md)
+### [band](docs/sdks/band/README.md)
 
 * [bandNumberOpenapiJson](docs/sdks/band/README.md#bandnumberopenapijson) - Download ./gen/http/openapi.json
 * [bandNumberPlay](docs/sdks/band/README.md#bandnumberplay) - play band
 <!-- End SDK Available Operations -->
 
 <!-- Start Dev Containers -->
-
-
 
 <!-- End Dev Containers -->
 

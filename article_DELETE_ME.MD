@@ -20,7 +20,7 @@ import { Callout } from '~/components';
     - [Review the Goa design file](#review-the-goa-design-file)
     - [Generate the API code with Goa](#generate-the-api-code-with-goa)
       - [Explore the generated files](#explore-the-generated-files)
-    - [Run a server and client](#run-a-server-and-client)
+    - [Run the server and CLI](#run-the-server-and-cli)
   - [Create the API with Speakeasy](#create-the-api-with-speakeasy)
   - [Set up the Speakeasy CLI](#set-up-the-speakeasy-cli)
   - [Build an SDK](#build-an-sdk)
@@ -236,58 +236,60 @@ The following files and folders are created by `goa example`. They are a startin
 - `/cmd/club-cli` — A Go package containing a CLI tool that you can compile and call from the terminal to make requests to the server above.
 - `band.go` — A placeholder implementation of your service. You can write your actual business logic here. You might think this file belongs in the `/cmd/club` folder with the API implementation, instead of in the root of the project. We think so too, and are not sure why Goa puts it here.
 
-### Run a server and client
+### Run the server and CLI
 
 Goa has given us a simple, but working client and server implementation. Let's compile and test them before starting with Speakeasy.
 
 Run the code below in the gobox container.
+
 ```bash
 go get app/cmd/club; # download dependencies
 go build ./cmd/club && go build ./cmd/club-cli;
 ```
 
-- `club`
-- `club-cli`
+You now have two executable files in the `app` folder, called `club` and `club-cli`.
 
-Since Go compiles to executables, you can now run the Club server in your physical machine.
+Run the Club server in a terminal on your host machine:
 ```bash
 ./club
 ```
 
-In another terminal
+In another terminal on your host, call the server using the CLI:
+
 ```bash
-./club-cli --help
-./club-cli order tea --body '{"includeMilk": false, "isGreen": false, "numberSugars": 1 }' # A nice cup of tea
- ./club-cli band play --body '{"style": "Bebop" }' # No response
+./club-cli --help;
+./club-cli order tea --body '{"includeMilk": false, "isGreen": false, "numberSugars": 1 }';
+./club-cli band play --body '{"style": "Bebop" }';
 ```
+
+While the CLI won't receive a response from the server because the implementation is just a placeholder, you can see in the server terminal that it has been successfully called. Stop the server by pushing ctrl-c in the terminal window.
 
 ## Create the API with Speakeasy
 
-Speakeasy is an online-only service. Please register before continuing this tutorial: https://app.speakeasyapi.dev. Once you've registered, create a workspace named `club`. Browse to API keys. Click `New Api Key`. Name it `club`. Copy and save the key content to use later.
-
-Speakeasy supports these languages: [C#, Go, Java, PHP, Python, Ruby, Swift, Typescript](https://www.speakeasyapi.dev/docs/create-client-sdks#language-support).
+Speakeasy is an online-only service. Please register before continuing this tutorial, at https://app.speakeasyapi.dev. Once you've registered, create a workspace named `club`. Browse to API keys. Click `New Api Key`. Name it `club`. Copy and save the key content to use later.
 
 ## Set up the Speakeasy CLI
 
 The CLI is the simplest way to use Speakeasy. This tutorial uses Docker, but if you want to install Speakeasy directly on your computer in the future, follow the instructions in the [readme](https://github.com/speakeasy-api/speakeasy#installation).
 
+Run the commands below in a terminal on your host machine.
 
 ```bash
-docker stop speakbox; docker rm speakbox;
-docker run --name speakbox -v ./app:/app -it alpine:3.18.4 sh; # docker run --name speakbox -v ./app:/app -it ubuntu:22.04 bash;
-apk add curl unzip sudo; # apt update; apt install curl unzip sudo -y;
-curl -fsSL https://raw.githubusercontent.com/speakeasy-api/speakeasy/main/install.sh | sh;
+docker run --name speakbox -v ./app:/app -it alpine:3.18.4 sh
 ```
 
-Now Speakeasy installed. Test it by running:
+In the simple Linux container called speakbox that starts, run the code below. Use your API key that you saved earlier in the last line.
+
+```bash
+apk add curl unzip sudo; # install dependencies
+curl -fsSL https://raw.githubusercontent.com/speakeasy-api/speakeasy/main/install.sh | sh; # install Speakeasy
+export SPEAKEASY_API_KEY=your_api_key_here; # <-- overwrite this with your key
+```
+
+Now Speakeasy installed in the container. Test it by running:
 
 ```bash
 speakeasy help;
-```
-
-Now add you API key that you saved earlier when registering with Speakeasy.
-```
-export SPEAKEASY_API_KEY=your_api_key_here
 ```
 
 <Aside>
@@ -307,15 +309,17 @@ speakeasy generate sdk \
     --out /app/sdk
 ```
 
-Remember to give yourself permissions to the files on your host machine again.
+Remember to give yourself permissions to the files on your host machine again:
 
 ```bash
-sudo chown -R 1000:1000 ./app;
+sudo chown -R $(id -u):$(id -g) .
 ```
 
-validate your schema
+TODO validate your schema
 
-
+<Aside>
+While we're using TypeScript in this tutorial, Speakeasy supports all these languages: [C#, Go, Java, PHP, Python, Ruby, Swift, Typescript](https://www.speakeasyapi.dev/docs/create-client-sdks#language-support).
+</Aside>
 
 ### Retries
 https://www.speakeasyapi.dev/docs/customize-sdks/retries
