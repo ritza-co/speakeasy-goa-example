@@ -1,6 +1,6 @@
 - [Generate SDKs with Goa](#generate-sdks-with-goa)
   - [Prerequisites](#prerequisites)
-  - [Goa](#goa)
+  - [Introduction to Goa](#introduction-to-goa)
     - [Other Go OpenAPI frameworks](#other-go-openapi-frameworks)
     - [Tsoa](#tsoa)
   - [Create the API specification in Goa](#create-the-api-specification-in-goa)
@@ -39,7 +39,7 @@ You need only Docker, version 20 or greater. You can complete this tutorial on L
 
 If you are running on Windows, please replace backslashes with forward slashes in the few places where we refer to a folder path on your host machine.
 
-## Goa
+## Introduction to Goa
 
 (If you are familiar with Goa you can skip ahead to the next section on building an API.)
 
@@ -61,6 +61,9 @@ Most frameworks generate Go code from an existing OpenAPI schema, and don't allo
 [Swaggest Rest](https://github.com/swaggest/rest) can generate OpenAPI definitions from Go code, but is not as comprehensive as Goa and does not support gRPC.
 
 ### Tsoa
+[Tsoa](https://github.com/lukeautry/tsoa) is a popular Typescript framework similar to Goa that you may encounter in the OpenAPI ecosystem. Speakeasy has a [tutorial](/docs/api-frameworks/tsoa) for it too.
+
+Goa was created in 2015 and Tsoa in 2016. While Tsoa uses decorators and can work with normal Express.js code, Goa starts with an abstract design document in its domain specific language (DSL) and uses that to generate code and schemas.
 
 ## Create the API specification in Goa
 - clone code or download zip
