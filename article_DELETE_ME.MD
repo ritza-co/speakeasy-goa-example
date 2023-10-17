@@ -30,17 +30,18 @@ flowchart LR
   Speakeasy --> c[C# SDK]
   Speakeasy --> p[Go SDK]
   Speakeasy --> etc[Other SDKs...]
-
 ```
 
 We will talk you through creating a complete code example. By the end of the tutorial you will have a working API service running in Go that you call through Typescript code in an SDK.
 
 ## Prerequisites
-You need only Docker, version 20 or greater. You can complete this tutorial on Linux, Mac, or Windows since Docker commands are not dependent on your operating system, or any installed frameworks.
+You need only Docker, version 20 or greater. You can complete this tutorial on Linux, Mac, or Windows since Docker commands are not dependent on your operating system or any installed frameworks.
 
 If you are running on Windows, please replace backslashes with forward slashes in the few places where we refer to a folder path on your host machine.
 
 ## Goa
+
+(If you are familiar with Goa you can skip ahead to the next section on building an API.)
 
 [Goa](https://goa.design/learn/getting-started/) is a package written in the Go language that allows you to define an API in Go syntax using functions from the Goa design language. Goa uses your definition in its `design.go` file to create
 - an OpenAPI schema that can be used by programmers, or tools like Speakeasy, to understand your API,
@@ -57,7 +58,7 @@ Most frameworks generate Go code from an existing OpenAPI schema, and don't allo
 - [Ogen](https://github.com/ogen-go/ogen)
 - [Swaggest's OpenAPI structures for Go](https://github.com/swaggest/openapi-go)
 
-https://github.com/swaggest/rest
+[Swaggest Rest](https://github.com/swaggest/rest) can generate OpenAPI definitions from Go code, but is not as comprehensive as Goa and does not support gRPC.
 
 ### Tsoa
 
