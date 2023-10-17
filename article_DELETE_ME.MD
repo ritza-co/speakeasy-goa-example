@@ -1,7 +1,6 @@
 - [Generate SDKs with Goa](#generate-sdks-with-goa)
   - [Prerequisites](#prerequisites)
   - [Goa](#goa)
-    - [Other Go web frameworks](#other-go-web-frameworks)
     - [Other Go API frameworks](#other-go-api-frameworks)
   - [Customising the schema](#customising-the-schema)
   - [Tsoa](#tsoa)
@@ -50,8 +49,6 @@ If you are running on Windows, please replace backslashes with forward slashes i
 - a command line interface (CLI) to call your API,
 - the low level transport-agnostic code to provide the API on a server over protocols like HTTP and gRPC,
 - Go code stubs for the service itself, that you can complete with business logic.
-
-### Other Go web frameworks
 
 ### Other Go API frameworks
 - https://stackoverflow.com/questions/66171424/how-to-generate-openapi-v3-specification-from-go-source-code
@@ -135,7 +132,8 @@ Speakeasy is an online-only service. Please register before continuing this tuto
 Speakeasy supports these languages: [C#, Go, Java, PHP, Python, Ruby, Swift, Typescript](https://www.speakeasyapi.dev/docs/create-client-sdks#language-support).
 
 ## Set up the Speakeasy CLI
-The CLI is the simplest way to use Speakeasy. You can install it directly by following the instructions in the [readme](https://github.com/speakeasy-api/speakeasy). This tutorial uses the CLI from Docker to make all instructions as reproducible as possible.
+The CLI is the simplest way to use Speakeasy. This tutorial uses Docker, but if you want to install Speakeasy directly on your computer in the future, follow the instructions in the [readme](https://github.com/speakeasy-api/speakeasy#installation).
+
 
 ```bash
 docker stop speakbox; docker rm speakbox;
