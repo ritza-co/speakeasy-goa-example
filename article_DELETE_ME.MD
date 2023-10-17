@@ -315,7 +315,10 @@ Remember to give yourself permissions to the files on your host machine again:
 sudo chown -R $(id -u):$(id -g) .
 ```
 
+TODO speakeasy to work with GET tea
 TODO validate your schema
+TODO make schema look like Niels
+TODO implement niel's suggestions
 
 <Aside>
 While we're using TypeScript in this tutorial, Speakeasy supports all these languages: [C#, Go, Java, PHP, Python, Ruby, Swift, Typescript](https://www.speakeasyapi.dev/docs/create-client-sdks#language-support).
