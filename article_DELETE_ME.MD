@@ -22,8 +22,8 @@ import { Callout } from '~/components';
       - [Explore the generated files](#explore-the-generated-files)
     - [Run the server and CLI](#run-the-server-and-cli)
   - [Create the API with Speakeasy](#create-the-api-with-speakeasy)
-  - [Set up the Speakeasy CLI](#set-up-the-speakeasy-cli)
-  - [Build an SDK](#build-an-sdk)
+    - [Set up the Speakeasy CLI](#set-up-the-speakeasy-cli)
+    - [Build an SDK](#build-an-sdk)
     - [Retries](#retries)
   - [Next steps](#next-steps)
     - [Get help with advanced Goa](#get-help-with-advanced-goa)
@@ -262,13 +262,13 @@ In another terminal on your host, call the server using the CLI:
 ./club-cli band play --body '{"style": "Bebop" }';
 ```
 
-While the CLI won't receive a response from the server because the implementation is just a placeholder, you can see in the server terminal that it has been successfully called. Stop the server by pushing ctrl-c in the terminal window.
+While the CLI won't receive a response from the server because the implementation is just a placeholder, you can see in the server terminal that it has been successfully called. Stop the server by pushing <kbd>Ctrl+C</kbd> in the terminal window.
 
 ## Create the API with Speakeasy
 
 Speakeasy is an online-only service. Please register before continuing this tutorial, at https://app.speakeasyapi.dev. Once you've registered, create a workspace named `club`. Browse to API keys. Click `New Api Key`. Name it `club`. Copy and save the key content to use later.
 
-## Set up the Speakeasy CLI
+### Set up the Speakeasy CLI
 
 The CLI is the simplest way to use Speakeasy. This tutorial uses Docker, but if you want to install Speakeasy directly on your computer in the future, follow the instructions in the [readme](https://github.com/speakeasy-api/speakeasy#installation).
 
@@ -283,10 +283,11 @@ In the simple Linux container called speakbox that starts, run the code below. U
 ```bash
 apk add curl unzip sudo; # install dependencies
 curl -fsSL https://raw.githubusercontent.com/speakeasy-api/speakeasy/main/install.sh | sh; # install Speakeasy
+
 export SPEAKEASY_API_KEY=your_api_key_here; # <-- overwrite this with your key
 ```
 
-Now Speakeasy installed in the container. Test it by running:
+Now Speakeasy is installed in the container. Test it by running:
 
 ```bash
 speakeasy help;
@@ -299,7 +300,7 @@ docker start speakbox; docker exec -it speakbox sh;
 ```
 </Aside>
 
-## Build an SDK
+### Build an SDK
 You now have `app/gen/http/openapi3.yaml` and Speakeasy. So you can build the SDK. In the speakbox container you started in the last section, run:
 
 ```bash
