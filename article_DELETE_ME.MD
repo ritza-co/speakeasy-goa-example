@@ -1,31 +1,55 @@
-## Todo
-- use models instead of plain datatypes
-- review https://github.com/speakeasy-api/speakeasy
-- https://github.com/goadesign/goa/issues/3390
-  - Include link to - https://invite.slack.golangbridge.org/
-  - Register for the group at https://invite.slack.golangbridge.org/.
-  - Log in at https://gophers.slack.com/.
-  - add pull request to getting started article.
+- [Generate SDKs with Goa](#generate-sdks-with-goa)
+  - [Prerequisites](#prerequisites)
+  - [Goa](#goa)
+    - [Other Go web frameworks](#other-go-web-frameworks)
+    - [Other Go API frameworks](#other-go-api-frameworks)
+  - [Customising the schema](#customising-the-schema)
+  - [Tsoa](#tsoa)
+  - [Create the API specification in Goa](#create-the-api-specification-in-goa)
+  - [Create the API with Speakeasy](#create-the-api-with-speakeasy)
+  - [Set up the Speakeasy CLI](#set-up-the-speakeasy-cli)
+  - [Build an SDK](#build-an-sdk)
+    - [Retries](#retries)
+  - [Next steps](#next-steps)
+    - [Get help with advanced Goa](#get-help-with-advanced-goa)
+  - [Todo](#todo)
 
-# The article
+# Generate SDKs with Goa
 
-## Introduction
-write go code in goa -> goa.design makes openapi spec, goa.example makes code stubs you complete to actually make the backend do stuff -> put openapi spec in speakeasy -> generates sdks in all languages
+This tutorial explains how to define an application programming interface (API) service written in Go with Goa, convert it to an OpenAPI 3 schema with Goa, and convert that to software development kits (SDKs) in multiple languages with Speakeasy.
+
+Below is a graphical summary of the creation process you will follow.
+
+```mermaid
+flowchart LR
+  design.go --> Goa
+  Goa --> api[OpenAPI schema]
+  Goa --> cli[Client API CLI]
+  Goa --> client[Client Go code]
+  Goa --> server[Server Go code]
+  api --> Speakeasy
+  Speakeasy --> ts[TypeScript SDK]
+  Speakeasy --> c[C# SDK]
+  Speakeasy --> p[Python SDK]
+  Speakeasy --> etc[Other languages...]
+
+```
+
+We will talk you through creating a complete code example. By the end of the tutorial you will have a working API service running in Go that you call through Typescript code in an SDK.
 
 ## Prerequisites
-Docker, version 20 or greater.
+You need only Docker, version 20 or greater. You can complete this tutorial on Linux, Mac, or Windows since Docker commands are not dependent on your operating system, or any installed frameworks.
 
-Speakeasy is an online-only service. Please register before continuing this tutorial: https://app.speakeasyapi.dev. Once you've registered, create a workspace with named `club`. Browse to API keys. Click `New Api Key`. Name it `club`. Copy and save the key content to use later.
+If you are running on Windows, please replace backslashes with forward slashes in the few places where we refer to a folder path on your physical machine.
 
 ## Goa
 
-### Introduction
-
-### Get help
-Use the Go Slack group to ask for help with Goa.
-- Register for the group at https://invite.slack.golangbridge.org/.
-- Log in at https://gophers.slack.com/.
-- Join the Goa channel to ask questions on the framework.
+[Goa](https://goa.design/learn/getting-started/) is a package written in the Go language that allows you to define an API in Go syntax using functions from the Goa design language. Goa uses your definition in its `design.go` file to create
+- an OpenAPI schema that can be used by programmers, or tools like Speakeasy, to understand your API,
+- Go code for a client application to call your API,
+- a command line interface (CLI) to call your API,
+- the low level transport-agnostic code to provide the API on a server over protocols like HTTP and gRPC,
+- Go code stubs for the service itself, that you can complete with business logic.
 
 ### Other Go web frameworks
 
@@ -106,6 +130,8 @@ In another terminal
 
 ## Create the API with Speakeasy
 
+Speakeasy is an online-only service. Please register before continuing this tutorial: https://app.speakeasyapi.dev. Once you've registered, create a workspace named `club`. Browse to API keys. Click `New Api Key`. Name it `club`. Copy and save the key content to use later.
+
 Speakeasy supports these languages: [C#, Go, Java, PHP, Python, Ruby, Swift, Typescript](https://www.speakeasyapi.dev/docs/create-client-sdks#language-support).
 
 ## Set up the Speakeasy CLI
@@ -159,3 +185,21 @@ validate your schema
 ### Retries
 https://www.speakeasyapi.dev/docs/customize-sdks/retries
 
+## Next steps
+
+### Get help with advanced Goa
+If you want to build a more complex API and need help understanding Goa, read the full [design language specification](https://pkg.go.dev/goa.design/goa/dsl).
+
+You can also use the Go Slack group to ask for help:
+- Register for the group at https://invite.slack.golangbridge.org.
+- Log in at https://gophers.slack.com.
+- Join the Goa channel to ask questions about the framework.
+
+## Todo
+- use models instead of plain datatypes
+- review https://github.com/speakeasy-api/speakeasy
+- https://github.com/goadesign/goa/issues/3390
+  - Include link to - https://invite.slack.golangbridge.org/
+  - Register for the group at https://invite.slack.golangbridge.org/.
+  - Log in at https://gophers.slack.com/.
+  - add pull request to getting started article.
