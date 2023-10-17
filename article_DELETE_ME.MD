@@ -19,6 +19,8 @@ import { Callout } from '~/components';
     - [Setup Go](#setup-go)
     - [Review the Goa design file](#review-the-goa-design-file)
     - [Generate the API code with Goa](#generate-the-api-code-with-goa)
+      - [Explore the generated files](#explore-the-generated-files)
+    - [Run a server and client](#run-a-server-and-client)
   - [Create the API with Speakeasy](#create-the-api-with-speakeasy)
   - [Set up the Speakeasy CLI](#set-up-the-speakeasy-cli)
   - [Build an SDK](#build-an-sdk)
@@ -29,7 +31,7 @@ import { Callout } from '~/components';
 
 # Generate SDKs with Goa
 
-This tutorial explains how to define an application programming interface (API) service written in Go with Goa, convert it to an OpenAPI (formerly known as Swagger) schema with Goa, and convert that to software development kits (SDKs) in multiple languages with Speakeasy.
+This tutorial explains how to define an application programming interface (API) service written in Go with Goa, convert it to an OpenAPI schema with Goa, and convert that to software development kits (SDKs) in multiple languages with Speakeasy. (OpenAPI used to be known as Swagger, which is now a set of tools that can be used with OpenAPI schemas.)
 
 Below is a graphical summary of the creation process you will follow.
 
@@ -107,7 +109,7 @@ In a terminal inside the `speakeasy-goa-example` folder, run the commands below.
 mkdir app;
 cd app;
 cp completed_app/lib .; # copy protoc into your new app
-cp completed_app/design .; # a simple Goa design file
+cp completed_app/design .; # copy in a simple Goa design file
 
 docker run --name gobox --volume .:/go/src/app -it golang:1.21.2 bash; # start Go in a container and share your app folder with it
 ```
@@ -138,37 +140,114 @@ go mod init app; # create a new Go package in this folder called app
 go install goa.design/goa/v3/cmd/goa@v3; # install Goa
 go install google.golang.org/protobuf/cmd/protoc-gen-go@latest; # install grpc
 go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest;
-export PATH=$PATH:/go/src/app/lib # add protoc to our path
+export PATH=$PATH:/go/src/app/lib # add protoc to your path
 ```
 
 ### Review the Goa design file
 
-You now have Goa installed and ready to run against a Goa design file. Let's pause to review the API specification in `app/design/design.go`.
+You now have Goa installed and ready to run against a Goa design file. Let's pause to review the API specification in `app/design/design.go`. Open the file now.
 
+After importing Goa, the design starts by defining the overall API:
 
+```go
+var _ = API("club", func() {
+	Title("The Club")
+	Description("A club that serves tea and plays jazz. A Goa and Speakeasy example.")
+	Version("1.0.0")
+    Server("club", func() {
+        Host("localhost", func() {
+            URI("http://localhost:51000")
+            URI("grpc://localhost:52000")
+        })
+    })
+})
+```
 
-Your file `app/design/design.go` should now match the file `app/design/design_completed.go`.
+You see that everything in the Goa DSL is a function. The `API` function takes a function that runs other functions to specify parts of the overall definition of the API, such `Description`, `Version`, and the endpoints (URLs) of the server. To learn all the possible functions Goa provides, read the [DSL documentation](https://pkg.go.dev/goa.design/goa/dsl).
+
+The example you are creating provides a virtual jazz club, allowing you to order a digital drink and change the genre of music played. These features are defined in two separate services, `order` and `band`. While the `club` API title corresponds to the server URL and is not visible, the service names are visible in URLs: `http://localhost:51000/order` and `http://localhost:51000/band`
+
+The definitions of the two services are below the API. Let's look at the drinks service.
+
+```go
+var _ = Service("order", func() {
+	Description("A waiter that brings drinks.")
+	Method("tea", func() {
+		Description("Order a cup of tea.")
+		Payload(func() {
+			Field(1, "isGreen", Boolean, "Whether to have green tea instead of normal.")
+			Field(2, "numberSugars", Int, "Number of spoons of sugar.")
+			Field(3, "includeMilk", Boolean, "Whether to have milk.")
+		})
+		Result(String)
+		HTTP(func() {
+			GET("/tea")
+		})
+		GRPC(func() {
+		})
+	})
+	Files("/openapi.json", "./gen/http/openapi.json")
+})
+```
+
+Above you can see we've defined a single method, called `tea`, in the `order` service, that takes a few parameters about how you like your milk and sugar, and returns a string representing a cup of tea.
+
+<!-- Your file `app/design/design.go` should now match the file `app/design/design_completed.go`. -->
 
 ### Generate the API code with Goa
+
+Generate the client and server code, and the OpenAPI schema from your design file, by running the commands below in the gobox container.
 
 ```bash
 goa gen app/design;
 goa example app/design;
 ```
 
-In your host machine terminal, not in the container terminal, give yourself permissions to edit the created files. Rerun this whenever you create a file in the container.
+The files created in the container will belong to the root user, and you will not be able to edit them on your host. So in a terminal on your host machine in the app `folder`, give yourself permissions to edit the created files:
 
 ```bash
-sudo chown -R 1000:1000 ./app;
+sudo chown -R $(id -u):$(id -g) .
 ```
 
-In `order.go` set: `return "A nice cup of tea", nil`
+Rerun this whenever you create a file in the container.
 
-Compile it in the container.
+#### Explore the generated files
+
+Goa has written a lot of code for us. Below is everything created under `app`, and what it does. To avoid duplication, there is only an explanation for the band files, not for the order files, because they are both services and are structured identically.
+
+The following files and folders are created by `goa gen`, and you may regenerate them when your `design.go` file changes. You may not edit them manually.
+
+- `/gen` — Contains all definition and communication code for HTTP, gRPC, and schemas. Think of the `gen` folder as your `definitions` folder.
+- `/gen/band` — Contains transport independent service code.
+- `/gen/band/client.go` — Can be imported by client code to make calls to the server.
+- `/gen/band/endpoints.go` — Exposes the service code to the transport layers.
+- `/gen/grpc` — Contains the server and client code which connects the protoc-generated gRPC server and client code, along with the logic to encode and decode requests and responses
+- `/gen/grpc/band/pb` — Contains the protocol buffer files that describe the band gRPC service.
+- `/gen/grpc/band/pb/goagen_app_band_grpc.pb.go` — The output of the protoc tool.
+- `/gen/grpc/cli` — Contains the CLI code to build gRPC requests from a terminal.
+- `/gen/http` — All HTTP related transport code, for server and client.
+- `/gen/http/openapi3.yaml` — The OpenAPI version 3 schema (next to .json schemas, and version 1 schemas)
+
+The following files and folders are created by `goa example`. They are a starting point to write your business logic implementation and tests for your server. You may **not** regenerate them when your `design.go` file changes. Rather update them manually.
+
+- `/cmd` — Contains working placeholder server and CLI code. Think of the `cmd` folder as your `implementation` folder.
+- `/cmd/club` — A Go package containing your API that you can compile and run to have a working server.
+- `/cmd/club/main.go` — The server placeholder implementation that you can change to your liking. Add your favorite logger and database manager here.
+- `/cmd/club-cli` — A Go package containing a CLI tool that you can compile and call from the terminal to make requests to the server above.
+- `band.go` — A placeholder implementation of your service. You can write your actual business logic here. You might think this file belongs in the `/cmd/club` folder with the API implementation, instead of in the root of the project. We think so too, and are not sure why Goa puts it here.
+
+### Run a server and client
+
+Goa has given us a simple, but working client and server implementation. Let's compile and test them before starting with Speakeasy.
+
+Run the code below in the gobox container.
 ```bash
 go get app/cmd/club; # download dependencies
 go build ./cmd/club && go build ./cmd/club-cli;
 ```
+
+- `club`
+- `club-cli`
 
 Since Go compiles to executables, you can now run the Club server in your physical machine.
 ```bash
