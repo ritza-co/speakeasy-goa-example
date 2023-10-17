@@ -1,9 +1,24 @@
+---
+title: Generate client SDKs with Goa
+description: "How to use Goa and Speakeasy to generate client SDKs for your Goa API."
+technology: Goa
+url: https://github.com/ritza-co/speakeasy-goa-example
+codeRoot: https://raw.githubusercontent.com/ritza-co/speakeasy-goa-example/main
+---
+
+import { Callout } from '~/components';
+
 - [Generate SDKs with Goa](#generate-sdks-with-goa)
   - [Prerequisites](#prerequisites)
   - [Introduction to Goa](#introduction-to-goa)
     - [Other Go OpenAPI frameworks](#other-go-openapi-frameworks)
     - [Tsoa](#tsoa)
   - [Create the API specification in Goa](#create-the-api-specification-in-goa)
+    - [Download the example repository](#download-the-example-repository)
+    - [Google's protocol buffers](#googles-protocol-buffers)
+    - [Setup Go](#setup-go)
+    - [Review the Goa design file](#review-the-goa-design-file)
+    - [Generate the API code with Goa](#generate-the-api-code-with-goa)
   - [Create the API with Speakeasy](#create-the-api-with-speakeasy)
   - [Set up the Speakeasy CLI](#set-up-the-speakeasy-cli)
   - [Build an SDK](#build-an-sdk)
@@ -66,32 +81,75 @@ Most frameworks generate Go code from an existing OpenAPI schema, and don't allo
 Goa was created in 2015 and Tsoa in 2016. While Tsoa uses decorators and can work with normal Express.js code, Goa starts with an abstract design document in its domain specific language (DSL) and uses that to generate code and schemas.
 
 ## Create the API specification in Goa
-- clone code or download zip
-- completed_application
+Now that you understand how Goa and Speakeasy are used, let's write some code.
+
+### Download the example repository
+First clone the <a href={frontmatter.url}>example repository</a> using the code below. If you don't have git, you can download the code and unzip it.
 
 ```bash
-cd ~/code/speakeasy-goa-example;
+git clone https://github.com/ritza-co/speakeasy-goa-example.git;
+cd speakeasy-goa-example;
+```
+
+While you will be creating a demonstration application in the `app` folder in this tutorial, there is a folder called `completed_app` in this repository that has all the final generated code and executable files.
+
+### Google's protocol buffers
+
+Goa generates [gRPC](https://grpc.io/) code for you. gRPC is an efficient alternative to plain HTTP, over which you can provide your API. It requires the use of protocol buffers, made by Google. Our repository already provides the `protoc` app for you, in `completed_app/lib`.
+
+To use more recent versions of `protoc` in future applications you write, download them from https://github.com/protocolbuffers/protobuf/releases.
+
+### Setup Go
+
+In a terminal inside the `speakeasy-goa-example` folder, run the commands below. Comments in the commands explain what they do.
+
+```bash
 mkdir app;
-docker stop gobox; docker rm gobox;
-docker run --name gobox -v ./app:/go/src/app -it golang:1.21.2 bash;
-cd src/app;
-go mod init app;
-go install goa.design/goa/v3/cmd/goa@v3;
-go install google.golang.org/protobuf/cmd/protoc-gen-go@latest;
-go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest;
+cd app;
+cp completed_app/lib .; # copy protoc into your new app
+cp completed_app/design .; # a simple Goa design file
 
-# download https://github.com/protocolbuffers/protobuf/releases/download/v24.4/protoc-24.4-linux-x86_64.zip from https://github.com/protocolbuffers/protobuf/releases
-# unzip and paste bin/protoc exe file into ./app/lib
-export PATH=$PATH:/go/src/app/lib # can't use relative path here
+docker run --name gobox --volume .:/go/src/app -it golang:1.21.2 bash; # start Go in a container and share your app folder with it
 ```
 
-On subsequent runs, you can start the container instead of rebuilding it:
+You now have an `app` folder ready to code in, and are inside a terminal in a Go container called `gobox` in Docker.
+
+<Aside>
+If you leave this tutorial and return later, you can start the container and attach to the terminal, instead of rebuilding everything:
 
 ```bash
-docker start gobox; docker exec -it gobox bash;
+docker start gobox;
+docker exec -it gobox bash;
 ```
 
-Write the API specification in `app/design/design.go`.
+If you need to delete the container and start over, run:
+
+```bash
+docker stop gobox;
+docker rm gobox;
+```
+</Aside>
+
+Run the following commands inside the gobox terminal.
+
+```bash
+cd src/app;
+go mod init app; # create a new Go package in this folder called app
+go install goa.design/goa/v3/cmd/goa@v3; # install Goa
+go install google.golang.org/protobuf/cmd/protoc-gen-go@latest; # install grpc
+go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest;
+export PATH=$PATH:/go/src/app/lib # add protoc to our path
+```
+
+### Review the Goa design file
+
+You now have Goa installed and ready to run against a Goa design file. Let's pause to review the API specification in `app/design/design.go`.
+
+
+
+Your file `app/design/design.go` should now match the file `app/design/design_completed.go`.
+
+### Generate the API code with Goa
 
 ```bash
 goa gen app/design;
@@ -131,6 +189,7 @@ Speakeasy is an online-only service. Please register before continuing this tuto
 Speakeasy supports these languages: [C#, Go, Java, PHP, Python, Ruby, Swift, Typescript](https://www.speakeasyapi.dev/docs/create-client-sdks#language-support).
 
 ## Set up the Speakeasy CLI
+
 The CLI is the simplest way to use Speakeasy. This tutorial uses Docker, but if you want to install Speakeasy directly on your computer in the future, follow the instructions in the [readme](https://github.com/speakeasy-api/speakeasy#installation).
 
 
@@ -208,3 +267,7 @@ You can also use the Go Slack group to ask for help:
 - Use $ref instead of inline schemas for input/output.
 - Speakeasy-specific OpenAPI extensions, for example, retries.
 - Tags to organize code in the generated SDKs.
+- check exe files into completed_app too
+- asides to callouts
+- test everything
+- copy design.go to design_completed.go

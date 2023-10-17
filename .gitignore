@@ -66,3 +66,8 @@ thumbs.db
 config.yaml
 app/club
 app/club-cli
+app/sdk/node_modules
+
+completed_app/club
+completed_app/club-cli
+completed_app/sdk/node_modules
