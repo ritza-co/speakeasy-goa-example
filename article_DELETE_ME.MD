@@ -415,3 +415,7 @@ You can also use the Go Slack group to ask for help:
 - asides to callouts
 - test everything
 - TODO - https://gophers.slack.com/archives/C0FK8EV28/p1697635268483699
+
+pull request to update goa docs https://pkg.go.dev/goa.design/goa/dsl that I can see.Tags: Meta("openapi:operationId", "band#play2")
+OperationId: Meta("openapi:tag:Music operations")
+Extensions: Meta("openapi:extension:x-speakeasy-name-override", "chai")
