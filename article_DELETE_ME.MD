@@ -229,7 +229,16 @@ An operationId is a unique name to clearly identify an operation (method). They 
 
 #### Add tags
 
-Speakeasy recommends adding tags to all operations, so you can group them by tag in generated SDK code and documentation.
+Speakeasy recommends adding tags to all operations, so you can group operations by tag in generated SDK code and documentation. A tag is just a label, like a comment, that you can add to a method.
+
+The [`Tag`](https://pkg.go.dev/goa.design/goa/dsl#Tag) function in Goa has a different meaning to in OpenAPI, so you need to use the `Meta` function again, in the `HTTP` section of a method.
+
+```go
+var _ = Service("band", func() {
+	Method("play", func() {
+		HTTP(func() {
+			Meta("openapi:tag:Music operations")
+```
 
 ### Generate the API code with Goa
 
@@ -397,3 +406,4 @@ You can also use the Go Slack group to ask for help:
 - change gitignore
 - asides to callouts
 - test everything
+- TODO - https://gophers.slack.com/archives/C0FK8EV28/p1697635268483699

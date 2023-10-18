@@ -47,6 +47,7 @@ var _ = Service("order", func() {
 		})
 		Result(String)
 		HTTP(func() {
+			Meta("openapi:tag:Drink operations")
 			GET("/tea")
 		})
 		GRPC(func() {
@@ -68,12 +69,13 @@ var _ = Service("band", func() {
 		})
 		Result(Empty)
 		HTTP(func() {
+			Meta("openapi:tag:Music operations")
 			POST("/play")
 		})
 		GRPC(func() {
 		})
-		Meta("openapi:tag", "Music operations")
 	})
 	Files("/openapi.json", "./gen/http/openapi.json")
 })
+
 
