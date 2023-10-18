@@ -18,7 +18,8 @@ import { Callout } from '~/components';
     - [Google's protocol buffers](#googles-protocol-buffers)
     - [Setup Go](#setup-go)
     - [Review the Goa design file](#review-the-goa-design-file)
-      - [Customizing fields](#customizing-fields)
+      - [Customize fields](#customize-fields)
+      - [Add tags](#add-tags)
     - [Generate the API code with Goa](#generate-the-api-code-with-goa)
       - [Explore the generated files](#explore-the-generated-files)
     - [Run the server and CLI](#run-the-server-and-cli)
@@ -213,7 +214,7 @@ var _ = Service("order", func() {
 
 Above you can see we've defined a single method, called `tea`, in the `order` service, that takes a few parameters about how you like your milk and sugar, and returns a string representing a cup of tea.
 
-#### Customizing fields
+#### Customize fields
 
 If you can't find a function in the Goa documentation that corresponds to an OpenAPI field you are expecting, you can probably add it with the [`Meta`](https://pkg.go.dev/goa.design/goa/dsl#Meta) function. `Meta` will add a field and value to any object.
 
@@ -223,6 +224,10 @@ For example, here's how you can change the default `operationId` value for a met
 Method("play", func() {
   Meta("openapi:operationId", "band#play2")
 ```
+
+#### Add tags
+
+Speakeasy recommends adding tags to all operations, so you can group them by tag in generated SDK code and documentation.
 
 ### Generate the API code with Goa
 
