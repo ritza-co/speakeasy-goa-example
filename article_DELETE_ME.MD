@@ -9,27 +9,28 @@ codeRoot: https://raw.githubusercontent.com/ritza-co/speakeasy-goa-example/main
 import { Callout } from '~/components';
 
 - [Generate SDKs with Goa](#generate-sdks-with-goa)
-  - [Prerequisites](#prerequisites)
-  - [Introduction to Goa](#introduction-to-goa)
-    - [Other Go OpenAPI frameworks](#other-go-openapi-frameworks)
-    - [Tsoa](#tsoa)
-  - [Create the API specification in Goa](#create-the-api-specification-in-goa)
-    - [Download the example repository](#download-the-example-repository)
-    - [Google's protocol buffers](#googles-protocol-buffers)
-    - [Setup Go](#setup-go)
-    - [Review the Goa design file](#review-the-goa-design-file)
-      - [Customize fields](#customize-fields)
-      - [Add tags](#add-tags)
-    - [Generate the API code with Goa](#generate-the-api-code-with-goa)
-      - [Explore the generated files](#explore-the-generated-files)
-    - [Run the server and CLI](#run-the-server-and-cli)
-  - [Create the API with Speakeasy](#create-the-api-with-speakeasy)
-    - [Set up the Speakeasy CLI](#set-up-the-speakeasy-cli)
-    - [Build an SDK](#build-an-sdk)
-    - [Retries](#retries)
-  - [Next steps](#next-steps)
-    - [Get help with advanced Goa](#get-help-with-advanced-goa)
-  - [Todo](#todo)
+	- [Prerequisites](#prerequisites)
+	- [Introduction to Goa](#introduction-to-goa)
+		- [Other Go OpenAPI frameworks](#other-go-openapi-frameworks)
+		- [Tsoa](#tsoa)
+	- [Create the API specification in Goa](#create-the-api-specification-in-goa)
+		- [Download the example repository](#download-the-example-repository)
+		- [Google's protocol buffers](#googles-protocol-buffers)
+		- [Setup Go](#setup-go)
+		- [Review the Goa design file](#review-the-goa-design-file)
+			- [Custom operationId](#custom-operationid)
+			- [Tags](#tags)
+			- [Extensions (custom fields)](#extensions-custom-fields)
+		- [Generate the API code with Goa](#generate-the-api-code-with-goa)
+			- [Explore the generated files](#explore-the-generated-files)
+		- [Run the server and CLI](#run-the-server-and-cli)
+	- [Create the API with Speakeasy](#create-the-api-with-speakeasy)
+		- [Set up the Speakeasy CLI](#set-up-the-speakeasy-cli)
+		- [Build an SDK](#build-an-sdk)
+		- [Retries](#retries)
+	- [Next steps](#next-steps)
+		- [Get help with advanced Goa](#get-help-with-advanced-goa)
+	- [Todo](#todo)
 
 # Generate SDKs with Goa
 
@@ -214,7 +215,7 @@ var _ = Service("order", func() {
 
 Above you can see we've defined a single method, called `tea`, in the `order` service, that takes a few parameters about how you like your milk and sugar, and returns a string representing a cup of tea.
 
-#### Customize fields
+#### Custom operationId
 
 If you can't find a function in the Goa documentation that corresponds to an OpenAPI field you are expecting, you can probably add it with the [`Meta`](https://pkg.go.dev/goa.design/goa/dsl#Meta) function. `Meta` will add a field and value to any object.
 
@@ -227,9 +228,9 @@ Method("play", func() {
 
 An operationId is a unique name to clearly identify an operation (method). They are useful to name and discuss operations in documentation and SDKs.
 
-#### Add tags
+#### Tags
 
-Speakeasy recommends adding tags to all operations, so you can group operations by tag in generated SDK code and documentation. A tag is just a label, like a comment, that you can add to a method.
+Speakeasy recommends adding [tags](https://swagger.io/docs/specification/grouping-operations-with-tags/) to all operations, so you can group operations by tag in generated SDK code and documentation. A tag is just a label, like a comment, that you can add to a method.
 
 The [`Tag`](https://pkg.go.dev/goa.design/goa/dsl#Tag) function in Goa has a different meaning to in OpenAPI, so you need to use the `Meta` function again, in the `HTTP` section of a method.
 
@@ -238,6 +239,17 @@ var _ = Service("band", func() {
 	Method("play", func() {
 		HTTP(func() {
 			Meta("openapi:tag:Music operations")
+```
+
+#### Extensions (custom fields)
+
+OpenAPI supports fields that are not in the specification. These [extensions](https://swagger.io/docs/specification/openapi-extensions/) allow you to add custom data to your schema that might have special meaning to applications like Speakeasy. They start with `x-`. Don't add too many of these, as they make your schema less generic.
+
+Speakeasy provides a set of [OpenAPI extensions](/docs/customize-sdks). For example, you may want to give an SDK method a name different from the operationId:
+
+```go
+Method("tea", func() {
+  Meta("openapi:extension:x-speakeasy-name-override", "chai")
 ```
 
 ### Generate the API code with Goa
@@ -280,7 +292,7 @@ The following files and folders are created by `goa example`. They are a startin
 - `/cmd/club` — A Go package containing your API that you can compile and run to have a working server.
 - `/cmd/club/main.go` — The server placeholder implementation that you can change to your liking. Add your favorite logger and database manager here.
 - `/cmd/club-cli` — A Go package containing a CLI tool that you can compile and call from the terminal to make requests to the server above.
-- `band.go` — A placeholder implementation of your service. You can write your actual business logic here. You might think this file belongs in the `/cmd/club` folder with the API implementation, instead of in the root of the project. We think so too, and are not sure why Goa puts it here.
+- `band.go` — A placeholder implementation of your service. You can write your actual business logic here. You might think this file belongs in the `/cmd/club` folder with the API implementation, instead of in the root of the project.
 
 ### Run the server and CLI
 
@@ -368,11 +380,11 @@ TODO validate your schema
 TODO implement niel's suggestions - explain how to make customisations
 
 <Aside>
-While we're using TypeScript in this tutorial, Speakeasy supports all these languages: [C#, Go, Java, PHP, Python, Ruby, Swift, Typescript](https://www.speakeasyapi.dev/docs/create-client-sdks#language-support).
+While we're using TypeScript in this tutorial, Speakeasy supports all these languages: [C#, Go, Java, PHP, Python, Ruby, Swift, Typescript](/docs/create-client-sdks#language-support).
 </Aside>
 
 ### Retries
-https://www.speakeasyapi.dev/docs/customize-sdks/retries
+/docs/customize-sdks/retries
 
 ## Next steps
 
