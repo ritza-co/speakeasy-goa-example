@@ -183,7 +183,7 @@ var _ = API("club", func() {
 })
 ```
 
-You see that everything in the Goa DSL is a function. The `API` function takes a function that runs other functions to specify parts of the overall definition of the API, such `Description`, `Version`, and the endpoints (URLs) of the server. To learn all the possible functions Goa provides, read the [DSL documentation](https://pkg.go.dev/goa.design/goa/dsl). Read the [Goa getting start guide](https://goa.design/learn/getting-started/) to create .
+You see that everything in the Goa DSL is a function. The `API` function takes a function that runs other functions to specify parts of the overall definition of the API, such `Description`, `Version`, and the endpoints (URLs) of the server. To learn all the possible functions Goa provides, read the [DSL documentation](https://pkg.go.dev/goa.design/goa/dsl). To create a simpler — minimal — definition, read the [Goa getting start guide](https://goa.design/learn/getting-started/).
 
 The example you are creating provides a virtual jazz club, allowing you to order a digital drink and change the genre of music played. These features are defined in two separate services, `order` and `band`. While the `club` API title corresponds to the server URL and is not visible, the service names are visible in URLs: `http://localhost:51000/order` and `http://localhost:51000/band`
 
@@ -377,5 +377,6 @@ You can also use the Go Slack group to ask for help:
 - copy everything to completed_app
 -
 - check exe files into completed_app too
+- change gitignore
 - asides to callouts
 - test everything
