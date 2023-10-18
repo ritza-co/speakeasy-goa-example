@@ -151,19 +151,39 @@ After importing Goa, the design starts by defining the overall API:
 
 ```go
 var _ = API("club", func() {
-	Title("The Club")
-	Description("A club that serves tea and plays jazz. A Goa and Speakeasy example.")
+	Title("The Speakeasy Club")
 	Version("1.0.0")
-    Server("club", func() {
-        Host("localhost", func() {
-            URI("http://localhost:51000")
-            URI("grpc://localhost:52000")
-        })
-    })
+	Description("A club that serves drinks and plays jazz. A Goa and Speakeasy example.")
+	Contact(func() {
+		Name("Speakeasy Support")
+		Email("None. Please use Slack.")
+		URL("https://speakeasy-dev.slack.com/join/shared_invite/zt-1cwb3flxz-lS5SyZxAsF_3NOq5xc8Cjw")
+	})
+	Docs(func() {
+		Description("The Speakeasy Club documentation")
+		URL("https://www.speakeasyapi.dev/docs")
+	})
+	License(func() {
+		Name("Apache 2.0")
+		URL("https://www.apache.org/licenses/LICENSE-2.0.html")
+	})
+	TermsOfService("https://www.speakeasyapi.dev/docs/terms-of-service")
+	Server("club", func() {
+		Description("club server hosts the band and order services.")
+		Services("band", "order")
+		Host("dev", func() {
+			Description("The development host. Safe to use for testing.")
+			URI("http://{machine}:51000")
+			URI("grpc://{machine}:52000")
+			Variable("machine", String, "Machine IP Address", func() {
+				Default("localhost")
+			})
+		})
+	})
 })
 ```
 
-You see that everything in the Goa DSL is a function. The `API` function takes a function that runs other functions to specify parts of the overall definition of the API, such `Description`, `Version`, and the endpoints (URLs) of the server. To learn all the possible functions Goa provides, read the [DSL documentation](https://pkg.go.dev/goa.design/goa/dsl).
+You see that everything in the Goa DSL is a function. The `API` function takes a function that runs other functions to specify parts of the overall definition of the API, such `Description`, `Version`, and the endpoints (URLs) of the server. To learn all the possible functions Goa provides, read the [DSL documentation](https://pkg.go.dev/goa.design/goa/dsl). Read the [Goa getting start guide](https://goa.design/learn/getting-started/) to create .
 
 The example you are creating provides a virtual jazz club, allowing you to order a digital drink and change the genre of music played. These features are defined in two separate services, `order` and `band`. While the `club` API title corresponds to the server URL and is not visible, the service names are visible in URLs: `http://localhost:51000/order` and `http://localhost:51000/band`
 
@@ -316,10 +336,10 @@ Remember to give yourself permissions to the files on your host machine again:
 sudo chown -R $(id -u):$(id -g) .
 ```
 
+TODO make schema look like Niels
 TODO speakeasy to work with GET tea
 TODO validate your schema
-TODO make schema look like Niels
-TODO implement niel's suggestions
+TODO implement niel's suggestions - explain how to make customisations
 
 <Aside>
 While we're using TypeScript in this tutorial, Speakeasy supports all these languages: [C#, Go, Java, PHP, Python, Ruby, Swift, Typescript](https://www.speakeasyapi.dev/docs/create-client-sdks#language-support).
@@ -354,7 +374,8 @@ You can also use the Go Slack group to ask for help:
 - Use $ref instead of inline schemas for input/output.
 - Speakeasy-specific OpenAPI extensions, for example, retries.
 - Tags to organize code in the generated SDKs.
+- copy everything to completed_app
+-
 - check exe files into completed_app too
 - asides to callouts
 - test everything
-- copy design.go to design_completed.go

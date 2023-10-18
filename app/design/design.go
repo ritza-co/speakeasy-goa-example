@@ -5,15 +5,35 @@ import (
 )
 
 var _ = API("club", func() {
-	Title("The Club")
-	Description("A club that serves tea and plays jazz. A Goa and Speakeasy example.")
+	Title("The Speakeasy Club")
 	Version("1.0.0")
-    Server("club", func() {
-        Host("localhost", func() {
-            URI("http://localhost:51000")
-            URI("grpc://localhost:52000")
-        })
-    })
+	Description("A club that serves drinks and plays jazz. A Goa and Speakeasy example.")
+	Contact(func() {
+		Name("Speakeasy Support")
+		Email("None. Please use Slack.")
+		URL("https://speakeasy-dev.slack.com/join/shared_invite/zt-1cwb3flxz-lS5SyZxAsF_3NOq5xc8Cjw")
+	})
+	Docs(func() {
+		Description("The Speakeasy Club documentation")
+		URL("https://www.speakeasyapi.dev/docs")
+	})
+	License(func() {
+		Name("Apache 2.0")
+		URL("https://www.apache.org/licenses/LICENSE-2.0.html")
+	})
+	TermsOfService("https://www.speakeasyapi.dev/docs/terms-of-service")
+	Server("club", func() {
+		Description("club server hosts the band and order services.")
+		Services("band", "order")
+		Host("dev", func() {
+			Description("The development host. Safe to use for testing.")
+			URI("http://{machine}:51000")
+			URI("grpc://{machine}:52000")
+			Variable("machine", String, "Machine IP Address", func() {
+				Default("localhost")
+			})
+		})
+	})
 })
 
 var _ = Service("order", func() {

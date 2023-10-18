@@ -1,3 +1,15 @@
+# Application files
+app/**/**
+!app/design/design.go
+!app/lib
+!app/go.mod
+!app/go.sum
+
+completed_app/club
+completed_app/club-cli
+completed_app/sdk/node_modules
+
+
 # Compiled Object files, Static and Dynamic libraries (Unix-like)
 *.o
 *.a
@@ -61,13 +73,3 @@ thumbs.db
 *.db
 *.db-shm
 *.db-wal
-
-# Application configuration file
-config.yaml
-app/club
-app/club-cli
-app/sdk/node_modules
-
-completed_app/club
-completed_app/club-cli
-completed_app/sdk/node_modules

@@ -20,5 +20,5 @@ func NewOrder(logger *log.Logger) order.Service {
 // Order a cup of tea.
 func (s *ordersrvc) Tea(ctx context.Context, p *order.TeaPayload) (res string, err error) {
 	s.logger.Print("order.tea")
-	return "A nice cup of tea", nil
+	return "", nil
 }
