@@ -72,6 +72,7 @@ var _ = Service("band", func() {
 		})
 		GRPC(func() {
 		})
+		Meta("openapi:tag", "Music operations")
 	})
 	Files("/openapi.json", "./gen/http/openapi.json")
 })

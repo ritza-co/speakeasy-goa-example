@@ -225,6 +225,8 @@ Method("play", func() {
   Meta("openapi:operationId", "band#play2")
 ```
 
+An operationId is a unique name to clearly identify an operation (method). They are useful to name and discuss operations in documentation and SDKs.
+
 #### Add tags
 
 Speakeasy recommends adding tags to all operations, so you can group them by tag in generated SDK code and documentation.
