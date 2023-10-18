@@ -27,7 +27,7 @@ var _ = API("club", func() {
 		Services("band", "order")
 		Host("dev", func() {
 			Description("The development host. Safe to use for testing.")
-			URI("http://{machine}:51000")
+			URI("http://{machine}:51000") // use the machine variable below
 			URI("grpc://{machine}:52000")
 			Variable("machine", String, "Machine IP Address", func() {
 				Default("localhost")

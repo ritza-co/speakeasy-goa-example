@@ -18,6 +18,7 @@ import { Callout } from '~/components';
     - [Google's protocol buffers](#googles-protocol-buffers)
     - [Setup Go](#setup-go)
     - [Review the Goa design file](#review-the-goa-design-file)
+      - [Customizing fields](#customizing-fields)
     - [Generate the API code with Goa](#generate-the-api-code-with-goa)
       - [Explore the generated files](#explore-the-generated-files)
     - [Run the server and CLI](#run-the-server-and-cli)
@@ -173,7 +174,7 @@ var _ = API("club", func() {
 		Services("band", "order")
 		Host("dev", func() {
 			Description("The development host. Safe to use for testing.")
-			URI("http://{machine}:51000")
+			URI("http://{machine}:51000") // use the machine variable below
 			URI("grpc://{machine}:52000")
 			Variable("machine", String, "Machine IP Address", func() {
 				Default("localhost")
@@ -212,7 +213,16 @@ var _ = Service("order", func() {
 
 Above you can see we've defined a single method, called `tea`, in the `order` service, that takes a few parameters about how you like your milk and sugar, and returns a string representing a cup of tea.
 
-<!-- Your file `app/design/design.go` should now match the file `app/design/design_completed.go`. -->
+#### Customizing fields
+
+If you can't find a function in the Goa documentation that corresponds to an OpenAPI field you are expecting, you can probably add it with the [`Meta`](https://pkg.go.dev/goa.design/goa/dsl#Meta) function. `Meta` will add a field and value to any object.
+
+For example, here's how you can change the default `operationId` value for a method, which is normally `serviceName#methodPath`:
+
+```go
+Method("play", func() {
+  Meta("openapi:operationId", "band#play2")
+```
 
 ### Generate the API code with Goa
 
@@ -248,7 +258,7 @@ The following files and folders are created by `goa gen`, and you may regenerate
 - `/gen/http` — All HTTP related transport code, for server and client.
 - `/gen/http/openapi3.yaml` — The OpenAPI version 3 schema (next to .json schemas, and version 1 schemas)
 
-The following files and folders are created by `goa example`. They are a starting point to write your business logic implementation and tests for your server. You may **not** regenerate them when your `design.go` file changes. Rather update them manually.
+The following files and folders are created by `goa example`. They are a starting point to write your business logic implementation and tests for your server. You may **not** regenerate them when your `design.go` file changes. Rather update them manually. If you haven't started work on your implementation yet and do wish to regenerate the files, delete the existing files first to be certain that Goa recreates them.
 
 - `/cmd` — Contains working placeholder server and CLI code. Think of the `cmd` folder as your `implementation` folder.
 - `/cmd/club` — A Go package containing your API that you can compile and run to have a working server.
