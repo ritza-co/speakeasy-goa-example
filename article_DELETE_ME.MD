@@ -17,12 +17,12 @@ import { Callout } from '~/components';
 	- [Create the API specification in Goa](#create-the-api-specification-in-goa)
 		- [Download the example repository](#download-the-example-repository)
 		- [Google's protocol buffers](#googles-protocol-buffers)
-		- [Setup Go](#setup-go)
+		- [Set up Go](#set-up-go)
 		- [Review the Goa design file](#review-the-goa-design-file)
-			- [References ($ref)](#references-ref)
-			- [Custom operationId](#custom-operationid)
-			- [Tags](#tags)
-			- [Extensions (custom fields)](#extensions-custom-fields)
+			- [Modularize with references](#modularize-with-references)
+			- [Rename with custom operationIds](#rename-with-custom-operationids)
+			- [Group operations with tags](#group-operations-with-tags)
+			- [Customize with extensions](#customize-with-extensions)
 			- [Retry calling the server](#retry-calling-the-server)
 		- [Generate the API code with Goa](#generate-the-api-code-with-goa)
 			- [Explore the generated files](#explore-the-generated-files)
@@ -30,7 +30,6 @@ import { Callout } from '~/components';
 	- [Create the API with Speakeasy](#create-the-api-with-speakeasy)
 		- [Set up the Speakeasy CLI](#set-up-the-speakeasy-cli)
 		- [Build an SDK](#build-an-sdk)
-		- [Retries](#retries)
 	- [Next steps](#next-steps)
 		- [Get help with advanced Goa](#get-help-with-advanced-goa)
 		- [Use Speakeasy customizations](#use-speakeasy-customizations)
@@ -115,7 +114,7 @@ Goa generates [gRPC](https://grpc.io/) code for you. gRPC is an efficient altern
 
 To use more recent versions of `protoc` in future applications you write, download them from https://github.com/protocolbuffers/protobuf/releases.
 
-### Setup Go
+### Set up Go
 
 In a terminal inside the `speakeasy-goa-example` folder, run the commands below. Comments in the commands explain what they do.
 
@@ -231,11 +230,11 @@ var _ = Service("order", func() {
 
 Above you can see you've defined a single GET method, called `tea`, in the `order` service, that takes a few parameters about how you like your milk and sugar, and returns a string representing a cup of tea.
 
-#### References ($ref)
+#### Modularize with references
 
 Goa automatically moves complex types out of the service definition section into their own section in the schema. For example, in `design.go` the line `$ref: '#/components/schemas/TeaRequestBody'` refers the order specification for tea to the `components` section later in the document. This uses a JSON feature called [references](https://swagger.io/docs/specification/using-ref).
 
-#### Custom operationId
+#### Rename with custom operationIds
 
 If you can't find a function in the Goa documentation that corresponds to an OpenAPI field you are expecting, you can probably add it with the [`Meta`](https://pkg.go.dev/goa.design/goa/dsl#Meta) function. `Meta` will add a field and value to any object.
 
@@ -248,7 +247,7 @@ Method("play", func() {
 
 An operationId is a unique name to clearly identify an operation (method). They are useful to name and discuss operations in documentation and SDKs.
 
-#### Tags
+#### Group operations with tags
 
 Speakeasy recommends adding [tags](https://swagger.io/docs/specification/grouping-operations-with-tags/) to all operations, so you can group operations by tag in generated SDK code and documentation. A tag is just a label, like a comment, that you can add to a method.
 
@@ -261,7 +260,7 @@ var _ = Service("band", func() {
 			Meta("openapi:tag:Music operations")
 ```
 
-#### Extensions (custom fields)
+#### Customize with extensions
 
 OpenAPI supports fields that are not in the specification. These [extensions](https://swagger.io/docs/specification/openapi-extensions/) allow you to add custom data to your schema that might have special meaning to applications like Speakeasy. They start with `x-`.
 
@@ -428,9 +427,6 @@ sudo chown -R $(id -u):$(id -g) .
 <Aside>
 While you're using only TypeScript in this tutorial, Speakeasy supports: [C#, Go, Java, PHP, Python, Ruby, Swift, Typescript](/docs/create-client-sdks#language-support).
 </Aside>
-
-### Retries
-/docs/customize-sdks/retries
 
 ## Next steps
 
