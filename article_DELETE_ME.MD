@@ -61,9 +61,9 @@ We will talk you through creating a complete code example. By the end of the tut
 
 ## Is this tutorial right for you?
 
-If you're new to OpenAPI, Go, Goa, or Speakeasy, this is the perfect tutorial to see if they are the appropriate technologies for your service.
+If you're new to OpenAPI, Go, Goa, or Speakeasy, this is the perfect tutorial to see if they are the appropriate technologies for your service. If you're familiar with Goa, but not with Speakeasy, this is also the right place to start.
 
-If you definitely want to use your OpenAPI schema as a starting point, and not Go code that is transpiled into a schema, Goa is not the right choice for you. Rather choose one of the other [Go frameworks](#other-go-openapi-frameworks) below.
+But if you definitely want to use your OpenAPI schema as a starting point, and not Go code that is transpiled into a schema, Goa is not the right choice for you. Rather choose one of the other [Go frameworks](#other-go-openapi-frameworks) below.
 
 You also might want to design your schema without choosing any programming language. In this case, you could start with the [Swagger schema editor](https://swagger.io/tools/swagger-editor/). However, using Goa's elegant design language is a lot simpler than trying to design your schema manually. It also creates all the HTTP and gRPC transport code for you.
 
