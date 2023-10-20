@@ -159,7 +159,7 @@ export PATH=$PATH:/go/src/app/lib; # add protoc to your path
 
 You now have Goa installed and ready to run against a Goa design file. Let's pause to review the API specification in `app/design/design.go`. Open the file now.
 
-After importing Goa, the design starts by defining the overall API:
+After importing Goa, the design starts by defining the top-level API:
 
 ```go
 var _ = API("club", func() {
@@ -197,7 +197,7 @@ var _ = API("club", func() {
 
 You see that everything in the Goa DSL is a function. The `API` function takes a function that runs other functions to specify parts of the overall definition of the API, such `Description`, `Version`, and the endpoints (URLs) of the server. To learn all the possible functions Goa provides, read the [DSL documentation](https://pkg.go.dev/goa.design/goa/dsl). To create a simpler — minimal — definition, read the [Goa getting start guide](https://goa.design/learn/getting-started/).
 
-The example you are creating provides a virtual jazz club, allowing you to order a digital drink and change the genre of music played. These features are defined in two separate services, `order` and `band`. While the `club` API title corresponds to the server URL and is not visible, the service names are visible in URLs: `http://localhost:51000/order` and `http://localhost:51000/band`
+The example you are creating provides a virtual jazz club, allowing you to order a digital drink and change the genre of music played. These features are defined in two separate services, `order` and `band`. While the `club` API title corresponds to the server URL and is not visible, the service names are visible in URLs: `http://localhost:51000/order` and `http://localhost:51000/band`.
 
 The definitions of the two services are below the API. Let's look at the drinks service.
 
@@ -222,11 +222,11 @@ var _ = Service("order", func() {
 })
 ```
 
-Above you can see we've defined a single method, called `tea`, in the `order` service, that takes a few parameters about how you like your milk and sugar, and returns a string representing a cup of tea.
+Above you can see we've defined a single GET method, called `tea`, in the `order` service, that takes a few parameters about how you like your milk and sugar, and returns a string representing a cup of tea.
 
 #### References ($ref)
 
-Goa automatically moves complex types out of the service definition section into their own section in the schema. For example, the line `$ref: '#/components/schemas/TeaRequestBody'` refers to order specification for tea to the `components` section later in the document. This uses a JSON feature called [references](https://swagger.io/docs/specification/using-ref).
+Goa automatically moves complex types out of the service definition section into their own section in the schema. For example, in `design.go` the line `$ref: '#/components/schemas/TeaRequestBody'` refers the order specification for tea to the `components` section later in the document. This uses a JSON feature called [references](https://swagger.io/docs/specification/using-ref).
 
 #### Custom operationId
 
@@ -256,7 +256,7 @@ var _ = Service("band", func() {
 
 #### Extensions (custom fields)
 
-OpenAPI supports fields that are not in the specification. These [extensions](https://swagger.io/docs/specification/openapi-extensions/) allow you to add custom data to your schema that might have special meaning to applications like Speakeasy. They start with `x-`. Don't add too many of these, as they make your schema less generic.
+OpenAPI supports fields that are not in the specification. These [extensions](https://swagger.io/docs/specification/openapi-extensions/) allow you to add custom data to your schema that might have special meaning to applications like Speakeasy. They start with `x-`.
 
 Speakeasy provides a set of [OpenAPI extensions](/docs/customize-sdks). For example, you may want to give an SDK method a name different from the operationId:
 
