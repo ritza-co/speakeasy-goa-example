@@ -137,6 +137,8 @@ If you leave this tutorial and return later, you can start the container and att
 ```bash
 docker start gobox;
 docker exec -it gobox bash;
+cd /go/src/app;
+export PATH=$PATH:/go/src/app/lib;
 ```
 
 If you need to delete the container and start over, run:
@@ -409,10 +411,7 @@ docker start speakbox; docker exec -it speakbox sh;
 You now have `app/gen/http/openapi3.yaml` and Speakeasy. So you can build the SDK. In the speakbox container terminal, run:
 
 ```bash
-speakeasy generate sdk \
-    --schema /app/gen/http/openapi3.yaml \
-    --lang typescript \
-    --out /app/sdk
+speakeasy generate sdk --schema /app/gen/http/openapi3.yaml --lang typescript --out /app/sdk
 ```
 
 Remember to give yourself permissions to the files on your host machine again:

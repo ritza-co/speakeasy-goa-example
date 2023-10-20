@@ -10,7 +10,6 @@ var _ = API("club", func() {
 	Description("A club that serves drinks and plays jazz. A Goa and Speakeasy example.")
 	Contact(func() {
 		Name("Speakeasy Support")
-		Email("None. Please use Slack.")
 		URL("https://speakeasy-dev.slack.com/join/shared_invite/zt-1cwb3flxz-lS5SyZxAsF_3NOq5xc8Cjw")
 	})
 	Docs(func() {
