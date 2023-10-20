@@ -271,7 +271,7 @@ Method("tea", func() {
 
 Speakeasy provides a schema extension called [retries](https://www.speakeasyapi.dev/docs/customize-sdks/retries) that will create an SDK that automatically retries calling the server if a call fails.
 
-In `design.go` retries are enabled for the entire API, as opposed to for an individual service or method, in this code:
+In `design.go`, retries for timeout errors are enabled for the entire API, as opposed to for an individual service or method, in this code:
 
 ```go
 Meta("openapi:extension:x-speakeasy-retries", `{
@@ -280,7 +280,7 @@ Meta("openapi:extension:x-speakeasy-retries", `{
 }`)
 ```
 
-that produces this OpenAPI yaml:
+that produces this OpenAPI YAML:
 
 ```yaml
 x-speakeasy-retries:
@@ -292,9 +292,9 @@ Note that the `Meta` function had to use JSON syntax in the value to output an e
 
 
 TODO
-- use models instead of plain datatypes
-- make schema look like Niels
 - speakeasy to work with GET tea
+- make schema look like Niels
+- use models instead of plain datatypes
 - validate your schema
 
 ### Generate the API code with Goa
