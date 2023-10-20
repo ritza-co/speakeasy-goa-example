@@ -9,6 +9,7 @@ codeRoot: https://raw.githubusercontent.com/ritza-co/speakeasy-goa-example/main
 import { Callout } from '~/components';
 
 - [Generate SDKs with Goa](#generate-sdks-with-goa)
+	- [Is this tutorial right for you?](#is-this-tutorial-right-for-you)
 	- [Prerequisites](#prerequisites)
 	- [Introduction to Goa](#introduction-to-goa)
 		- [Other Go OpenAPI frameworks](#other-go-openapi-frameworks)
@@ -31,6 +32,7 @@ import { Callout } from '~/components';
 		- [Retries](#retries)
 	- [Next steps](#next-steps)
 		- [Get help with advanced Goa](#get-help-with-advanced-goa)
+		- [Use Speakeasy customizations](#use-speakeasy-customizations)
 	- [Todo](#todo)
 
 # Generate SDKs with Goa
@@ -55,14 +57,20 @@ flowchart LR
 
 We will talk you through creating a complete code example. By the end of the tutorial you will have a working API service running in Go that you call through Typescript code in an SDK.
 
+## Is this tutorial right for you?
+
+If you're new to OpenAPI, Go, Goa, or Speakeasy, this is the perfect tutorial to work through to see if they are the appropriate technologies for your service.
+
+If you definitely want to use your OpenAPI schema as a starting point, and not Go code that is transpiled into a schema, Goa is not the right choice for you. Rather choose one of the other [Go frameworks](#othergos) below.
+
+You also might want to design your schema without choosing any programming language. In this case you could start with the [Swagger schema editor](https://swagger.io/tools/swagger-editor/). However, using Goa's elegant design language is a lot simpler than trying to design your schema manually. It also creates all the HTTP and gRPC transport code for you.
+
 ## Prerequisites
-You need only Docker, version 20 or greater. You can complete this tutorial on Linux, Mac, or Windows since Docker commands are not dependent on your operating system or any installed frameworks.
+For this tutorial you need only Docker, version 20 or greater. You can complete this tutorial on Linux, Mac, or Windows since Docker commands are not dependent on your operating system or any installed frameworks.
 
 If you are running on Windows, please replace backslashes with forward slashes in the few places where we refer to a folder path on your host machine.
 
 ## Introduction to Goa
-
-(If you are familiar with Goa you can skip ahead to the next section on building an API.)
 
 [Goa](https://goa.design/learn/getting-started/) is a package written in the Go language that allows you to define an API in Go syntax using functions from the Goa design language. Goa uses your definition in its `design.go` file to create
 - an OpenAPI schema that can be used by programmers, or tools like Speakeasy, to understand your API,
@@ -72,9 +80,9 @@ If you are running on Windows, please replace backslashes with forward slashes i
 - Go code stubs for the service itself, that you can complete with business logic.
 
 ### Other Go OpenAPI frameworks
-There are other Go OpenAPI frameworks, but we do not recommend any of them over Goa.
+{: #othergos}
 
-Most frameworks generate Go code from an existing OpenAPI schema, and don't allow you to write Go as a starting point. These include:
+Most other Go frameworks generate Go code from an existing OpenAPI schema, and don't allow you to write Go as a starting point. These include:
 - [Deepmap's OpenAPI code generator](https://github.com/deepmap/oapi-codegen)
 - [Ogen](https://github.com/ogen-go/ogen)
 - [Swaggest's OpenAPI structures for Go](https://github.com/swaggest/openapi-go)
@@ -404,6 +412,11 @@ You can also use the Go Slack group to ask for help:
 - Join the Goa channel to ask questions about the framework.
 
 But one of the fastest ways to find out how to do something, especially when using `Meta`, is to search the test cases, after cloning the [source code](https://github.com/goadesign/goa).
+
+### Use Speakeasy customizations
+
+Review the [Speakeasy customizations](https://www.speakeasyapi.dev/docs/customize-sdks) to see if adding any would make your service more understandable or usable.
+
 
 ## Todo
 - review https://github.com/speakeasy-api/speakeasy
