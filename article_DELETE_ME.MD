@@ -362,6 +362,19 @@ Run the Club server in a terminal on your host machine:
 ./club
 ```
 
+The output should be:
+
+```bash
+[club] 16:20:55 HTTP "Play" mounted on POST /play
+[club] 16:20:55 HTTP "./gen/http/openapi.json" mounted on GET /openapi.json
+[club] 16:20:55 HTTP "Tea" mounted on POST /tea
+[club] 16:20:55 HTTP "./gen/http/openapi.json" mounted on GET /openapi.json
+[club] 16:20:55 serving gRPC method band.Band/Play
+[club] 16:20:55 serving gRPC method order.Order/Tea
+[club] 16:20:55 HTTP server listening on "localhost:51000"
+[club] 16:20:55 gRPC server listening on "localhost:52000"
+```
+
 In another terminal on your host, call the server using the CLI:
 
 ```bash
