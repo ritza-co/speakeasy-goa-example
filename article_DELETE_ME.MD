@@ -61,7 +61,7 @@ We will talk you through creating a complete code example. By the end of the tut
 
 If you're new to OpenAPI, Go, Goa, or Speakeasy, this is the perfect tutorial to work through to see if they are the appropriate technologies for your service.
 
-If you definitely want to use your OpenAPI schema as a starting point, and not Go code that is transpiled into a schema, Goa is not the right choice for you. Rather choose one of the other [Go frameworks](#othergos) below.
+If you definitely want to use your OpenAPI schema as a starting point, and not Go code that is transpiled into a schema, Goa is not the right choice for you. Rather choose one of the other [Go frameworks](#other-go-openapi-frameworks) below.
 
 You also might want to design your schema without choosing any programming language. In this case you could start with the [Swagger schema editor](https://swagger.io/tools/swagger-editor/). However, using Goa's elegant design language is a lot simpler than trying to design your schema manually. It also creates all the HTTP and gRPC transport code for you.
 
@@ -72,7 +72,7 @@ If you are running on Windows, please replace backslashes with forward slashes i
 
 ## Introduction to Goa
 
-The [OpenAPI specification](https://spec.openapis.org/oas/latest.html) is a standard that explains how to create a human- and machine-readable schema (.json or .yaml document) for any web service. In this tutorial we refer to the standard as "the OpenAPI specification", and the definition you create for your service as "your OpenAPI schema", or just "your schema".
+The [OpenAPI specification](https://spec.openapis.org/oas/latest.html) is a standard that explains how to create a human- and machine-readable schema (.json or .yaml document) for any web service. (In this tutorial we refer to the standard as "the OpenAPI specification", and the definition you create for your service as "your OpenAPI schema", or just "your schema".)
 
 [Goa](https://goa.design/learn/getting-started/) is a package written in the Go language that allows you to define an API in Go syntax using functions from the Goa design language. Goa uses your definition in its `design.go` file to create
 - an OpenAPI schema that can be used by programmers, or tools like Speakeasy, to understand your API,
@@ -82,7 +82,6 @@ The [OpenAPI specification](https://spec.openapis.org/oas/latest.html) is a stan
 - Go code stubs for the service itself, that you can complete with business logic.
 
 ### Other Go OpenAPI frameworks
-{: #othergos}
 
 Most other Go frameworks generate Go code from an existing OpenAPI schema, and don't allow you to write Go as a starting point. These include:
 - [Deepmap's OpenAPI code generator](https://github.com/deepmap/oapi-codegen)
