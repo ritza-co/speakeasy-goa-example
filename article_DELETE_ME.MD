@@ -403,6 +403,8 @@ You can also use the Go Slack group to ask for help:
 - Log in at https://gophers.slack.com.
 - Join the Goa channel to ask questions about the framework.
 
+But one of the fastest ways to find out how to do something, especially when using `Meta`, is to search the test cases, after cloning the [source code](https://github.com/goadesign/goa).
+
 ## Todo
 - review https://github.com/speakeasy-api/speakeasy
 - https://github.com/goadesign/goa/issues/3390
