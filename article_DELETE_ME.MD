@@ -67,9 +67,9 @@ If you definitely want to use your OpenAPI schema as a starting point, and not G
 You also might want to design your schema without choosing any programming language. In this case you could start with the [Swagger schema editor](https://swagger.io/tools/swagger-editor/). However, using Goa's elegant design language is a lot simpler than trying to design your schema manually. It also creates all the HTTP and gRPC transport code for you.
 
 ## Prerequisites
-For this tutorial you need only Docker, version 20 or greater. You can complete this tutorial on Linux, Mac, or Windows since Docker commands are not dependent on your operating system or any installed frameworks.
+For this tutorial you need only Docker, version 20 or greater. You can complete this tutorial on Linux, Mac, or Windows, since Docker commands are not dependent on your operating system or any installed frameworks.
 
-If you are running on Windows, please replace backslashes with forward slashes in the few places where we refer to a folder path on your host machine.
+If you are running on Windows, please replace backslashes with forward slashes in the few places where you specify a folder path on your host machine.
 
 ## Introduction to Goa
 
@@ -84,7 +84,7 @@ The [OpenAPI specification](https://spec.openapis.org/oas/latest.html) is a stan
 
 ### Other Go OpenAPI frameworks
 
-Most other Go frameworks generate Go code from an existing OpenAPI schema, and don't allow you to write Go as a starting point. These include:
+Most other Go frameworks generate code from an existing OpenAPI schema, and don't allow you to write Go as a starting point. These include:
 - [Deepmap's OpenAPI code generator](https://github.com/deepmap/oapi-codegen)
 - [Ogen](https://github.com/ogen-go/ogen)
 - [Swaggest's OpenAPI structures for Go](https://github.com/swaggest/openapi-go)
@@ -120,6 +120,7 @@ To use more recent versions of `protoc` in future applications you write, downlo
 In a terminal inside the `speakeasy-goa-example` folder, run the commands below. Comments in the commands explain what they do.
 
 ```bash
+cd /go/src;
 mkdir app;
 cd app;
 cp completed_app/lib .; # copy protoc into your new app
@@ -194,10 +195,14 @@ var _ = API("club", func() {
 			})
 		})
 	})
+	Meta("openapi:extension:x-speakeasy-retries", `{
+		"strategy":"backoff",
+		"statusCodes": "408,504"
+	}`)
 })
 ```
 
-You see that everything in the Goa DSL is a function. The `API` function takes a function that runs other functions to specify parts of the overall definition of the API, such `Description`, `Version`, and the endpoints (URLs) of the server. To learn all the possible functions Goa provides, read the [DSL documentation](https://pkg.go.dev/goa.design/goa/dsl). To create a simpler — minimal — definition, read the [Goa getting start guide](https://goa.design/learn/getting-started/).
+You see that everything in the Goa DSL is a function. The `API` function takes a function that runs other functions to specify parts of the overall definition of the API, such `Description`, `Version`, and the endpoints (URLs) of the server. To learn all the possible functions Goa provides, read the [DSL documentation](https://pkg.go.dev/goa.design/goa/dsl). To create a simpler — minimal — definition, use the [Goa getting start guide](https://goa.design/learn/getting-started/).
 
 The example you are creating provides a virtual jazz club, allowing you to order a digital drink and change the genre of music played. These features are defined in two separate services, `order` and `band`. While the `club` API title corresponds to the server URL and is not visible, the service names are visible in URLs: `http://localhost:51000/order` and `http://localhost:51000/band`.
 
@@ -260,7 +265,7 @@ var _ = Service("band", func() {
 
 OpenAPI supports fields that are not in the specification. These [extensions](https://swagger.io/docs/specification/openapi-extensions/) allow you to add custom data to your schema that might have special meaning to applications like Speakeasy. They start with `x-`.
 
-Speakeasy provides a set of [OpenAPI extensions](/docs/customize-sdks). For example, you may want to give an SDK method a name different from the operationId:
+Speakeasy provides a set of [OpenAPI extensions](/docs/customize-sdks). For example, you may want to give an SDK method a name different to the operationId:
 
 ```go
 Method("tea", func() {
@@ -284,7 +289,7 @@ that produces this OpenAPI YAML:
 
 ```yaml
 x-speakeasy-retries:
-	statusCodes: 504,408
+	statusCodes: 408,504
 	strategy: backoff
 ```
 

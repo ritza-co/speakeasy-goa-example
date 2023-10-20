@@ -36,7 +36,7 @@ var _ = API("club", func() {
 	})
 	Meta("openapi:extension:x-speakeasy-retries", `{
 		"strategy":"backoff",
-		"statusCodes": "504,408"
+		"statusCodes": "408,504"
 	}`)
 })
 
