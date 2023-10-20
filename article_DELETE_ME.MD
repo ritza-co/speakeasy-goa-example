@@ -30,6 +30,7 @@ import { Callout } from '~/components';
 	- [Create the API with Speakeasy](#create-the-api-with-speakeasy)
 		- [Set up the Speakeasy CLI](#set-up-the-speakeasy-cli)
 		- [Build an SDK](#build-an-sdk)
+		- [Call your service with the SDK](#call-your-service-with-the-sdk)
 	- [Next steps](#next-steps)
 		- [Get help with advanced Goa](#get-help-with-advanced-goa)
 		- [Use Speakeasy customizations](#use-speakeasy-customizations)
@@ -59,11 +60,11 @@ We will talk you through creating a complete code example. By the end of the tut
 
 ## Is this tutorial right for you?
 
-If you're new to OpenAPI, Go, Goa, or Speakeasy, this is the perfect tutorial to work through to see if they are the appropriate technologies for your service.
+If you're new to OpenAPI, Go, Goa, or Speakeasy, this is the perfect tutorial to see if they are the appropriate technologies for your service.
 
 If you definitely want to use your OpenAPI schema as a starting point, and not Go code that is transpiled into a schema, Goa is not the right choice for you. Rather choose one of the other [Go frameworks](#other-go-openapi-frameworks) below.
 
-You also might want to design your schema without choosing any programming language. In this case you could start with the [Swagger schema editor](https://swagger.io/tools/swagger-editor/). However, using Goa's elegant design language is a lot simpler than trying to design your schema manually. It also creates all the HTTP and gRPC transport code for you.
+You also might want to design your schema without choosing any programming language. In this case, you could start with the [Swagger schema editor](https://swagger.io/tools/swagger-editor/). However, using Goa's elegant design language is a lot simpler than trying to design your schema manually. It also creates all the HTTP and gRPC transport code for you.
 
 ## Prerequisites
 For this tutorial you need only Docker, version 20 or greater. You can complete this tutorial on Linux, Mac, or Windows, since Docker commands are not dependent on your operating system or any installed frameworks.
@@ -332,9 +333,9 @@ The following files and folders are created by `goa example`. They are a startin
 
 - `/cmd` — Contains working placeholder server and CLI code. Think of the `cmd` folder as your `implementation` folder.
 - `/cmd/club` — A Go package containing your API that you can compile and run to have a working server.
-- `/cmd/club/main.go` — The server placeholder implementation that you can change to your liking. Add your favorite logger and database manager here.
+- `/cmd/club/main.go` — The server implementation that you can change to your liking. Add your favorite logger and database manager here.
 - `/cmd/club-cli` — A Go package containing a CLI tool that you can compile and call from the terminal to make requests to the server above.
-- `band.go` — A placeholder implementation of your service. You can write your actual business logic here. You might think this file belongs in the `/cmd/club` folder with the API implementation, instead of in the root of the project.
+- `band.go` — A placeholder implementation of your service. You can write your actual business logic here. You might think this file belongs in the `/cmd/club` folder with the API implementation, instead of in the root of the project. But Goa puts the API implementation in the `cmd` folder and all service implementations in the root.
 
 Take a little time to review `/gen/http/openapi3.yaml` and see how your `design.go` functions map to the generated YAML.
 
@@ -365,12 +366,6 @@ In another terminal on your host, call the server using the CLI:
 ```
 
 While the CLI won't receive a response from the server because the implementation is just a placeholder, you can see in the server terminal that it has been successfully called. Stop the server by pushing <kbd>Ctrl+C</kbd> in the terminal window.
-
-TODO
-- speakeasy to work with GET tea
-- make schema look like Niels
-- use models instead of plain datatypes
-- validate your schema
 
 ## Create the API with Speakeasy
 
@@ -403,13 +398,15 @@ speakeasy help;
 
 <Aside>
 If you exit the container and want to return to it later, run:
+
 ```bash
 docker start speakbox; docker exec -it speakbox sh;
 ```
+
 </Aside>
 
 ### Build an SDK
-You now have `app/gen/http/openapi3.yaml` and Speakeasy. So you can build the SDK. In the speakbox container you started in the last section, run:
+You now have `app/gen/http/openapi3.yaml` and Speakeasy. So you can build the SDK. In the speakbox container terminal, run:
 
 ```bash
 speakeasy generate sdk \
@@ -424,9 +421,19 @@ Remember to give yourself permissions to the files on your host machine again:
 sudo chown -R $(id -u):$(id -g) .
 ```
 
+TODO
+- speakeasy to work with GET tea
+- make schema look like Niels
+- use models instead of plain datatypes
+- validate your schema
+
+
 <Aside>
 While you're using only TypeScript in this tutorial, Speakeasy supports: [C#, Go, Java, PHP, Python, Ruby, Swift, Typescript](/docs/create-client-sdks#language-support).
 </Aside>
+
+### Call your service with the SDK
+todo
 
 ## Next steps
 
@@ -446,20 +453,24 @@ Review the [Speakeasy customizations](https://www.speakeasyapi.dev/docs/customiz
 
 
 ## Todo
-- review https://github.com/speakeasy-api/speakeasy
-- https://github.com/goadesign/goa/issues/3390
-  - Include link to - https://invite.slack.golangbridge.org/
-  - Register for the group at https://invite.slack.golangbridge.org/.
-  - Log in at https://gophers.slack.com/.
-  - add pull request to getting started article.
 
-- move goa go first explanation higher up, and give summary of what we are doing in the article for brand new users
+- recopy design.go to the tutorial with final code
 - copy everything to completed_app
 - check exe files into completed_app too
 - change gitignore
 - asides to callouts
 - test everything
 - https://gophers.slack.com/archives/C0FK8EV28/p1697635268483699
+
+
+Stuff for Stephan:
+
+- review https://github.com/speakeasy-api/speakeasy
+- https://github.com/goadesign/goa/issues/3390
+  - Include link to - https://invite.slack.golangbridge.org/
+  - Register for the group at https://invite.slack.golangbridge.org/.
+  - Log in at https://gophers.slack.com/.
+  - add pull request to getting started article.
 
 pull request to update goa docs https://pkg.go.dev/goa.design/goa/dsl that I can see.Tags: Meta("openapi:operationId", "band#play2")
 OperationId: Meta("openapi:tag:Music operations")
