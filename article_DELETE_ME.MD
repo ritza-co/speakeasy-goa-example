@@ -72,7 +72,7 @@ If you are running on Windows, please replace backslashes with forward slashes i
 
 ## Introduction to Goa
 
-The [OpenAPI specification](https://spec.openapis.org/oas/latest.html) is a standard that explains how to create a human- and machine-readable schema (.json or .yaml document) for any web service. (In this tutorial we refer to the standard as "the OpenAPI specification", and the definition you create for your service as "your OpenAPI schema", or just "your schema".)
+The [OpenAPI specification](https://spec.openapis.org/oas/latest.html) is a standard that explains how to create a human- and machine-readable schema (.json or .yaml document) for any web service. (This tutorial refers to the standard as "the OpenAPI specification", and the definition you create for your service as "your OpenAPI schema", or just "your schema".)
 
 [Goa](https://goa.design/learn/getting-started/) is a package written in the Go language that allows you to define an API in Go syntax using functions from the Goa design language. Goa uses your definition in its `design.go` file to create
 - an OpenAPI schema that can be used by programmers, or tools like Speakeasy, to understand your API,
@@ -223,7 +223,7 @@ var _ = Service("order", func() {
 })
 ```
 
-Above you can see we've defined a single GET method, called `tea`, in the `order` service, that takes a few parameters about how you like your milk and sugar, and returns a string representing a cup of tea.
+Above you can see you've defined a single GET method, called `tea`, in the `order` service, that takes a few parameters about how you like your milk and sugar, and returns a string representing a cup of tea.
 
 #### References ($ref)
 
@@ -396,7 +396,7 @@ sudo chown -R $(id -u):$(id -g) .
 ```
 
 <Aside>
-While we're using only TypeScript in this tutorial, Speakeasy supports: [C#, Go, Java, PHP, Python, Ruby, Swift, Typescript](/docs/create-client-sdks#language-support).
+While you're using only TypeScript in this tutorial, Speakeasy supports: [C#, Go, Java, PHP, Python, Ruby, Swift, Typescript](/docs/create-client-sdks#language-support).
 </Aside>
 
 ### Retries
