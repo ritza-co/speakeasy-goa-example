@@ -54,7 +54,7 @@ func New(
 	}
 	return &Server{
 		Mounts: []*MountPoint{
-			{"Tea", "GET", "/tea"},
+			{"Tea", "POST", "/tea"},
 			{"./gen/http/openapi.json", "GET", "/openapi.json"},
 		},
 		Tea:                NewTeaHandler(e.Tea, mux, decoder, encoder, errhandler, formatter),
@@ -93,7 +93,7 @@ func MountTeaHandler(mux goahttp.Muxer, h http.Handler) {
 			h.ServeHTTP(w, r)
 		}
 	}
-	mux.Handle("GET", "/tea", f)
+	mux.Handle("POST", "/tea", f)
 }
 
 // NewTeaHandler creates a HTTP handler which loads the HTTP request and calls

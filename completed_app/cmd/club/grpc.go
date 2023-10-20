@@ -21,7 +21,7 @@ import (
 
 // handleGRPCServer starts configures and starts a gRPC server on the given
 // URL. It shuts down the server if any error is received in the error channel.
-func handleGRPCServer(ctx context.Context, u *url.URL, orderEndpoints *order.Endpoints, bandEndpoints *band.Endpoints, wg *sync.WaitGroup, errc chan error, logger *log.Logger, debug bool) {
+func handleGRPCServer(ctx context.Context, u *url.URL, bandEndpoints *band.Endpoints, orderEndpoints *order.Endpoints, wg *sync.WaitGroup, errc chan error, logger *log.Logger, debug bool) {
 
 	// Setup goa log adapter.
 	var (
@@ -36,12 +36,12 @@ func handleGRPCServer(ctx context.Context, u *url.URL, orderEndpoints *order.End
 	// the service input and output data structures to gRPC requests and
 	// responses.
 	var (
-		orderServer *ordersvr.Server
 		bandServer  *bandsvr.Server
+		orderServer *ordersvr.Server
 	)
 	{
-		orderServer = ordersvr.New(orderEndpoints, nil)
 		bandServer = bandsvr.New(bandEndpoints, nil)
+		orderServer = ordersvr.New(orderEndpoints, nil)
 	}
 
 	// Initialize gRPC server with the middleware.
@@ -53,8 +53,8 @@ func handleGRPCServer(ctx context.Context, u *url.URL, orderEndpoints *order.End
 	)
 
 	// Register the servers.
-	orderpb.RegisterOrderServer(srv, orderServer)
 	bandpb.RegisterBandServer(srv, bandServer)
+	orderpb.RegisterOrderServer(srv, orderServer)
 
 	for svc, info := range srv.GetServiceInfo() {
 		for _, m := range info.Methods {

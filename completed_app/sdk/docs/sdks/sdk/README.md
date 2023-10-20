@@ -3,7 +3,7 @@
 
 ## Overview
 
-The Club: A club that serves tea and plays jazz. A Goa and Speakeasy example.
+The Speakeasy Club: A club that serves drinks and plays jazz. A Goa and Speakeasy example.
 
 ### Available Operations
 

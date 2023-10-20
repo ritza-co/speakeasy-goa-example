@@ -4,13 +4,20 @@
 
 import * as utils from "../internal/utils";
 import { Band } from "./band";
+import { DrinkOperations } from "./drinkoperations";
+import { MusicOperations } from "./musicoperations";
 import axios from "axios";
 import { AxiosInstance } from "axios";
 
 /**
  * Contains the list of servers available to the SDK
  */
-export const ServerList = ["http://localhost:51000"] as const;
+export const ServerList = [
+    /**
+     * club server hosts the band and order services.
+     */
+    "http://{machine}:51000",
+] as const;
 
 /**
  * The available configuration options for the SDK
@@ -25,6 +32,11 @@ export type SDKProps = {
      * Allows overriding the default server used by the SDK
      */
     serverIdx?: number;
+
+    /**
+     * Allows setting the machine variable for url substitution
+     */
+    machine?: string;
 
     /**
      * Allows overriding the default server URL used by the SDK
@@ -52,9 +64,11 @@ export class SDKConfiguration {
 }
 
 /**
- * The Club: A club that serves tea and plays jazz. A Goa and Speakeasy example.
+ * The Speakeasy Club: A club that serves drinks and plays jazz. A Goa and Speakeasy example.
  */
 export class SDK {
+    public drinkOperations: DrinkOperations;
+    public musicOperations: MusicOperations;
     /**
      * A band that plays jazz.
      */
@@ -64,19 +78,30 @@ export class SDK {
 
     constructor(props?: SDKProps) {
         let serverURL = props?.serverURL;
+        let defaults: any = {};
+
+        const serverDefaults = [
+            {
+                machine: props?.machine?.toString() ?? "localhost",
+            },
+        ];
         const serverIdx = props?.serverIdx ?? 0;
 
         if (!serverURL) {
             serverURL = ServerList[serverIdx];
+            defaults = serverDefaults[serverIdx];
         }
 
         const defaultClient = props?.defaultClient ?? axios.create({ baseURL: serverURL });
         this.sdkConfiguration = new SDKConfiguration({
             defaultClient: defaultClient,
             serverURL: serverURL,
+            serverDefaults: defaults,
             retryConfig: props?.retryConfig,
         });
 
+        this.drinkOperations = new DrinkOperations(this.sdkConfiguration);
+        this.musicOperations = new MusicOperations(this.sdkConfiguration);
         this.band = new Band(this.sdkConfiguration);
     }
 }

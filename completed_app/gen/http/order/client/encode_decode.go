@@ -22,7 +22,7 @@ import (
 // to call the "order" service "tea" endpoint
 func (c *Client) BuildTeaRequest(ctx context.Context, v any) (*http.Request, error) {
 	u := &url.URL{Scheme: c.scheme, Host: c.host, Path: TeaOrderPath()}
-	req, err := http.NewRequest("GET", u.String(), nil)
+	req, err := http.NewRequest("POST", u.String(), nil)
 	if err != nil {
 		return nil, goahttp.ErrInvalidURL("order", "tea", u.String(), err)
 	}

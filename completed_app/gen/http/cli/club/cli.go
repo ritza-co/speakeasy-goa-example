@@ -23,20 +23,20 @@ import (
 //
 //	command (subcommand1|subcommand2|...)
 func UsageCommands() string {
-	return `order tea
-band play
+	return `band play
+order tea
 `
 }
 
 // UsageExamples produces an example of a valid invocation of the CLI tool.
 func UsageExamples() string {
-	return os.Args[0] + ` order tea --body '{
+	return os.Args[0] + ` band play --body '{
+      "style": "Bebop"
+   }'` + "\n" +
+		os.Args[0] + ` order tea --body '{
       "includeMilk": false,
       "isGreen": false,
       "numberSugars": 375920453996173358
-   }'` + "\n" +
-		os.Args[0] + ` band play --body '{
-      "style": "Bebop"
    }'` + "\n" +
 		""
 }
@@ -51,21 +51,21 @@ func ParseEndpoint(
 	restore bool,
 ) (goa.Endpoint, any, error) {
 	var (
-		orderFlags = flag.NewFlagSet("order", flag.ContinueOnError)
-
-		orderTeaFlags    = flag.NewFlagSet("tea", flag.ExitOnError)
-		orderTeaBodyFlag = orderTeaFlags.String("body", "REQUIRED", "")
-
 		bandFlags = flag.NewFlagSet("band", flag.ContinueOnError)
 
 		bandPlayFlags    = flag.NewFlagSet("play", flag.ExitOnError)
 		bandPlayBodyFlag = bandPlayFlags.String("body", "REQUIRED", "")
-	)
-	orderFlags.Usage = orderUsage
-	orderTeaFlags.Usage = orderTeaUsage
 
+		orderFlags = flag.NewFlagSet("order", flag.ContinueOnError)
+
+		orderTeaFlags    = flag.NewFlagSet("tea", flag.ExitOnError)
+		orderTeaBodyFlag = orderTeaFlags.String("body", "REQUIRED", "")
+	)
 	bandFlags.Usage = bandUsage
 	bandPlayFlags.Usage = bandPlayUsage
+
+	orderFlags.Usage = orderUsage
+	orderTeaFlags.Usage = orderTeaUsage
 
 	if err := flag.CommandLine.Parse(os.Args[1:]); err != nil {
 		return nil, nil, err
@@ -82,10 +82,10 @@ func ParseEndpoint(
 	{
 		svcn = flag.Arg(0)
 		switch svcn {
-		case "order":
-			svcf = orderFlags
 		case "band":
 			svcf = bandFlags
+		case "order":
+			svcf = orderFlags
 		default:
 			return nil, nil, fmt.Errorf("unknown service %q", svcn)
 		}
@@ -101,17 +101,17 @@ func ParseEndpoint(
 	{
 		epn = svcf.Arg(0)
 		switch svcn {
-		case "order":
-			switch epn {
-			case "tea":
-				epf = orderTeaFlags
-
-			}
-
 		case "band":
 			switch epn {
 			case "play":
 				epf = bandPlayFlags
+
+			}
+
+		case "order":
+			switch epn {
+			case "tea":
+				epf = orderTeaFlags
 
 			}
 
@@ -135,19 +135,19 @@ func ParseEndpoint(
 	)
 	{
 		switch svcn {
-		case "order":
-			c := orderc.NewClient(scheme, host, doer, enc, dec, restore)
-			switch epn {
-			case "tea":
-				endpoint = c.Tea()
-				data, err = orderc.BuildTeaPayload(*orderTeaBodyFlag)
-			}
 		case "band":
 			c := bandc.NewClient(scheme, host, doer, enc, dec, restore)
 			switch epn {
 			case "play":
 				endpoint = c.Play()
 				data, err = bandc.BuildPlayPayload(*bandPlayBodyFlag)
+			}
+		case "order":
+			c := orderc.NewClient(scheme, host, doer, enc, dec, restore)
+			switch epn {
+			case "tea":
+				endpoint = c.Tea()
+				data, err = orderc.BuildTeaPayload(*orderTeaBodyFlag)
 			}
 		}
 	}
@@ -156,6 +156,32 @@ func ParseEndpoint(
 	}
 
 	return endpoint, data, nil
+}
+
+// bandUsage displays the usage of the band command and its subcommands.
+func bandUsage() {
+	fmt.Fprintf(os.Stderr, `A band that plays jazz.
+Usage:
+    %[1]s [globalflags] band COMMAND [flags]
+
+COMMAND:
+    play: Choose your jazz style.
+
+Additional help:
+    %[1]s band COMMAND --help
+`, os.Args[0])
+}
+func bandPlayUsage() {
+	fmt.Fprintf(os.Stderr, `%[1]s [flags] band play -body JSON
+
+Choose your jazz style.
+    -body JSON: 
+
+Example:
+    %[1]s band play --body '{
+      "style": "Bebop"
+   }'
+`, os.Args[0])
 }
 
 // orderUsage displays the usage of the order command and its subcommands.
@@ -182,32 +208,6 @@ Example:
       "includeMilk": false,
       "isGreen": false,
       "numberSugars": 375920453996173358
-   }'
-`, os.Args[0])
-}
-
-// bandUsage displays the usage of the band command and its subcommands.
-func bandUsage() {
-	fmt.Fprintf(os.Stderr, `A band that plays jazz.
-Usage:
-    %[1]s [globalflags] band COMMAND [flags]
-
-COMMAND:
-    play: Choose your jazz style.
-
-Additional help:
-    %[1]s band COMMAND --help
-`, os.Args[0])
-}
-func bandPlayUsage() {
-	fmt.Fprintf(os.Stderr, `%[1]s [flags] band play -body JSON
-
-Choose your jazz style.
-    -body JSON: 
-
-Example:
-    %[1]s band play --body '{
-      "style": "Bebop"
    }'
 `, os.Args[0])
 }

@@ -14,9 +14,10 @@ import (
 
 func main() {
 	var (
-		hostF = flag.String("host", "localhost", "Server host (valid values: localhost)")
+		hostF = flag.String("host", "dev", "Server host (valid values: dev)")
 		addrF = flag.String("url", "", "URL to service host")
 
+		machineF = flag.String("machine", "localhost", "Machine IP Address")
 		verboseF = flag.Bool("verbose", false, "Print request and response details")
 		vF       = flag.Bool("v", false, "Print request and response details")
 		timeoutF = flag.Int("timeout", 30, "Maximum number of seconds to wait for response")
@@ -32,10 +33,11 @@ func main() {
 		addr = *addrF
 		if addr == "" {
 			switch *hostF {
-			case "localhost":
-				addr = "http://localhost:51000"
+			case "dev":
+				addr = "http://{machine}:51000"
+				addr = strings.Replace(addr, "{machine}", *machineF, -1)
 			default:
-				fmt.Fprintf(os.Stderr, "invalid host argument: %q (valid hosts: localhost)\n", *hostF)
+				fmt.Fprintf(os.Stderr, "invalid host argument: %q (valid hosts: dev)\n", *hostF)
 				os.Exit(1)
 			}
 		}
@@ -97,12 +99,13 @@ func usage() {
 	fmt.Fprintf(os.Stderr, `%s is a command line client for the club API.
 
 Usage:
-    %s [-host HOST][-url URL][-timeout SECONDS][-verbose|-v] SERVICE ENDPOINT [flags]
+    %s [-host HOST][-url URL][-timeout SECONDS][-verbose|-v][-machine MACHINE] SERVICE ENDPOINT [flags]
 
-    -host HOST:  server host (localhost). valid values: localhost
+    -host HOST:  server host (dev). valid values: dev
     -url URL:    specify service URL overriding host URL (http://localhost:8080)
     -timeout:    maximum number of seconds to wait for response (30)
     -verbose|-v: print request and response details (false)
+    -machine:    Machine IP Address (localhost)
 
 Commands:
 %s

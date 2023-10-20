@@ -1,10 +1,24 @@
 openapi: 3.0.3
 info:
-    title: The Club
-    description: A club that serves tea and plays jazz. A Goa and Speakeasy example.
+    contact:
+        name: Speakeasy Support
+        url: https://speakeasy-dev.slack.com/join/shared_invite/zt-1cwb3flxz-lS5SyZxAsF_3NOq5xc8Cjw
+    description: A club that serves drinks and plays jazz. A Goa and Speakeasy example.
+    license:
+        name: Apache 2.0
+        url: https://www.apache.org/licenses/LICENSE-2.0.html
+    termsOfService: https://www.speakeasyapi.dev/docs/terms-of-service
+    title: The Speakeasy Club
     version: 1.0.0
+    x-speakeasy-retries:
+        statusCodes: 408,504
+        strategy: backoff
 servers:
-    - url: http://localhost:51000
+    - url: http://{machine}:51000
+      description: club server hosts the band and order services.
+      variables:
+        machine:
+            default: localhost
 paths:
     /openapi.json:
         get:
@@ -18,7 +32,7 @@ paths:
     /play:
         post:
             tags:
-                - band
+                - Music operations
             summary: play band
             description: Choose your jazz style.
             operationId: band#play
@@ -34,9 +48,9 @@ paths:
                 "204":
                     description: No Content response.
     /tea:
-        get:
+        post:
             tags:
-                - order
+                - Drink operations
             summary: tea order
             description: Order a cup of tea.
             operationId: order#tea

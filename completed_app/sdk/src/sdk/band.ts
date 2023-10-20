@@ -5,7 +5,6 @@
 import * as utils from "../internal/utils";
 import * as errors from "./models/errors";
 import * as operations from "./models/operations";
-import * as shared from "./models/shared";
 import { SDKConfiguration } from "./sdk";
 import { AxiosInstance, AxiosRequestConfig, AxiosResponse, RawAxiosRequestHeaders } from "axios";
 
@@ -60,79 +59,6 @@ export class Band {
             });
         switch (true) {
             case httpRes?.status == 200:
-                break;
-            case (httpRes?.status >= 400 && httpRes?.status < 500) ||
-                (httpRes?.status >= 500 && httpRes?.status < 600):
-                throw new errors.SDKError(
-                    "API error occurred",
-                    httpRes.status,
-                    httpRes?.data,
-                    httpRes
-                );
-        }
-
-        return res;
-    }
-
-    /**
-     * play band
-     *
-     * @remarks
-     * Choose your jazz style.
-     */
-    async bandNumberPlay(
-        req: shared.PlayRequestBody,
-        config?: AxiosRequestConfig
-    ): Promise<operations.BandNumberPlayResponse> {
-        if (!(req instanceof utils.SpeakeasyBase)) {
-            req = new shared.PlayRequestBody(req);
-        }
-
-        const baseURL: string = utils.templateUrl(
-            this.sdkConfiguration.serverURL,
-            this.sdkConfiguration.serverDefaults
-        );
-        const url: string = baseURL.replace(/\/$/, "") + "/play";
-
-        let [reqBodyHeaders, reqBody]: [object, any] = [{}, null];
-
-        try {
-            [reqBodyHeaders, reqBody] = utils.serializeRequestBody(req, "request", "json");
-        } catch (e: unknown) {
-            if (e instanceof Error) {
-                throw new Error(`Error serializing request body, cause: ${e.message}`);
-            }
-        }
-        const client: AxiosInstance = this.sdkConfiguration.defaultClient;
-        const headers: RawAxiosRequestHeaders = { ...reqBodyHeaders, ...config?.headers };
-        if (reqBody == null) throw new Error("request body is required");
-        headers["Accept"] = "*/*";
-
-        headers["user-agent"] = this.sdkConfiguration.userAgent;
-
-        const httpRes: AxiosResponse = await client.request({
-            validateStatus: () => true,
-            url: url,
-            method: "post",
-            headers: headers,
-            responseType: "arraybuffer",
-            data: reqBody,
-            ...config,
-        });
-
-        const contentType: string = httpRes?.headers?.["content-type"] ?? "";
-
-        if (httpRes?.status == null) {
-            throw new Error(`status code not found in response: ${httpRes}`);
-        }
-
-        const res: operations.BandNumberPlayResponse = new operations.BandNumberPlayResponse({
-            statusCode: httpRes.status,
-            contentType: contentType,
-            rawResponse: httpRes,
-        });
-        switch (true) {
-            case httpRes?.status == 204:
                 break;
             case (httpRes?.status >= 400 && httpRes?.status < 500) ||
                 (httpRes?.status >= 500 && httpRes?.status < 600):

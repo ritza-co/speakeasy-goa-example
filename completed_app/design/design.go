@@ -5,15 +5,38 @@ import (
 )
 
 var _ = API("club", func() {
-	Title("The Club")
-	Description("A club that serves tea and plays jazz. A Goa and Speakeasy example.")
+	Title("The Speakeasy Club")
 	Version("1.0.0")
-    Server("club", func() {
-        Host("localhost", func() {
-            URI("http://localhost:51000")
-            URI("grpc://localhost:52000")
-        })
-    })
+	Description("A club that serves drinks and plays jazz. A Goa and Speakeasy example.")
+	Contact(func() {
+		Name("Speakeasy Support")
+		URL("https://speakeasy-dev.slack.com/join/shared_invite/zt-1cwb3flxz-lS5SyZxAsF_3NOq5xc8Cjw")
+	})
+	Docs(func() {
+		Description("The Speakeasy Club documentation")
+		URL("https://www.speakeasyapi.dev/docs")
+	})
+	License(func() {
+		Name("Apache 2.0")
+		URL("https://www.apache.org/licenses/LICENSE-2.0.html")
+	})
+	TermsOfService("https://www.speakeasyapi.dev/docs/terms-of-service")
+	Server("club", func() {
+		Description("club server hosts the band and order services.")
+		Services("band", "order")
+		Host("dev", func() {
+			Description("The development host. Safe to use for testing.")
+			URI("http://{machine}:51000") // use the machine variable below
+			URI("grpc://{machine}:52000")
+			Variable("machine", String, "Machine IP Address", func() {
+				Default("localhost")
+			})
+		})
+	})
+	Meta("openapi:extension:x-speakeasy-retries", `{
+		"strategy":"backoff",
+		"statusCodes": "408,504"
+	}`)
 })
 
 var _ = Service("order", func() {
@@ -27,7 +50,8 @@ var _ = Service("order", func() {
 		})
 		Result(String)
 		HTTP(func() {
-			GET("/tea")
+			Meta("openapi:tag:Drink operations")
+			POST("/tea")
 		})
 		GRPC(func() {
 		})
@@ -48,6 +72,7 @@ var _ = Service("band", func() {
 		})
 		Result(Empty)
 		HTTP(func() {
+			Meta("openapi:tag:Music operations")
 			POST("/play")
 		})
 		GRPC(func() {
@@ -55,4 +80,5 @@ var _ = Service("band", func() {
 	})
 	Files("/openapi.json", "./gen/http/openapi.json")
 })
+
 

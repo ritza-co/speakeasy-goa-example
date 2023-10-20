@@ -5,15 +5,15 @@
 </div>
 
 <!-- Start SDK Installation -->
-# SDK Installation
+## SDK Installation
 
-## NPM
+### NPM
 
 ```bash
 npm add <UNSET>
 ```
 
-## Yarn
+### Yarn
 
 ```bash
 yarn add <UNSET>
@@ -22,15 +22,17 @@ yarn add <UNSET>
 
 ## SDK Example Usage
 <!-- Start SDK Example Usage -->
-
-
 ```typescript
 import { SDK } from "openapi";
 
 (async () => {
     const sdk = new SDK();
 
-    const res = await sdk.band.bandNumberOpenapiJson();
+    const res = await sdk.drinkOperations.orderNumberTea({
+        includeMilk: true,
+        isGreen: false,
+        numberSugars: 1584355970564842800,
+    });
 
     if (res.statusCode == 200) {
         // handle response
@@ -41,18 +43,23 @@ import { SDK } from "openapi";
 <!-- End SDK Example Usage -->
 
 <!-- Start SDK Available Operations -->
-# Available Resources and Operations
+## Available Resources and Operations
 
 
-## [band](docs/sdks/band/README.md)
+### [drinkOperations](docs/sdks/drinkoperations/README.md)
+
+* [orderNumberTea](docs/sdks/drinkoperations/README.md#ordernumbertea) - tea order
+
+### [musicOperations](docs/sdks/musicoperations/README.md)
+
+* [bandNumberPlay](docs/sdks/musicoperations/README.md#bandnumberplay) - play band
+
+### [band](docs/sdks/band/README.md)
 
 * [bandNumberOpenapiJson](docs/sdks/band/README.md#bandnumberopenapijson) - Download ./gen/http/openapi.json
-* [bandNumberPlay](docs/sdks/band/README.md#bandnumberplay) - play band
 <!-- End SDK Available Operations -->
 
 <!-- Start Dev Containers -->
-
-
 
 <!-- End Dev Containers -->
 

@@ -174,7 +174,6 @@ var _ = API("club", func() {
 	Description("A club that serves drinks and plays jazz. A Goa and Speakeasy example.")
 	Contact(func() {
 		Name("Speakeasy Support")
-		Email("None. Please use Slack.")
 		URL("https://speakeasy-dev.slack.com/join/shared_invite/zt-1cwb3flxz-lS5SyZxAsF_3NOq5xc8Cjw")
 	})
 	Docs(func() {
@@ -223,7 +222,8 @@ var _ = Service("order", func() {
 		})
 		Result(String)
 		HTTP(func() {
-			GET("/tea")
+			Meta("openapi:tag:Drink operations")
+			POST("/tea")
 		})
 		GRPC(func() {
 		})
@@ -232,7 +232,9 @@ var _ = Service("order", func() {
 })
 ```
 
-Above you can see you've defined a single GET method, called `tea`, in the `order` service, that takes a few parameters about how you like your milk and sugar, and returns a string representing a cup of tea.
+Above you can see you've defined a single POST method, called `tea`, in the `order` service, that takes a few parameters about how you like your milk and sugar, and returns a string representing a cup of tea.
+
+(Note that an HTTP GET method won't accept a complex method body, so you have to use POST for any calls other than simple URL Ids).
 
 #### Modularize with references
 
@@ -500,8 +502,6 @@ Review the [Speakeasy customizations](https://www.speakeasyapi.dev/docs/customiz
 
 ## Todo
 
-- recopy design.go to the tutorial with final code
-- copy everything to completed_app
 - check exe files into completed_app too
 - change gitignore
 - asides to callouts

@@ -1,8 +1,19 @@
 swagger: "2.0"
 info:
-    title: The Club
-    description: A club that serves tea and plays jazz. A Goa and Speakeasy example.
+    contact:
+        email: ""
+        name: Speakeasy Support
+        url: https://speakeasy-dev.slack.com/join/shared_invite/zt-1cwb3flxz-lS5SyZxAsF_3NOq5xc8Cjw
+    description: A club that serves drinks and plays jazz. A Goa and Speakeasy example.
+    license:
+        name: Apache 2.0
+        url: https://www.apache.org/licenses/LICENSE-2.0.html
+    termsOfService: https://www.speakeasyapi.dev/docs/terms-of-service
+    title: The Speakeasy Club
     version: 1.0.0
+    x-speakeasy-retries:
+        statusCodes: 408,504
+        strategy: backoff
 host: localhost:51000
 consumes:
     - application/json
@@ -29,7 +40,7 @@ paths:
     /play:
         post:
             tags:
-                - band
+                - Music operations
             summary: play band
             description: Choose your jazz style.
             operationId: band#play
@@ -47,9 +58,9 @@ paths:
             schemes:
                 - http
     /tea:
-        get:
+        post:
             tags:
-                - order
+                - Drink operations
             summary: tea order
             description: Order a cup of tea.
             operationId: order#tea
@@ -103,3 +114,6 @@ definitions:
             includeMilk: false
             isGreen: false
             numberSugars: 2987982917248960936
+externalDocs:
+    description: The Speakeasy Club documentation
+    url: https://www.speakeasyapi.dev/docs

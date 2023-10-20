@@ -20,7 +20,7 @@ import (
 
 // handleHTTPServer starts configures and starts a HTTP server on the given
 // URL. It shuts down the server if any error is received in the error channel.
-func handleHTTPServer(ctx context.Context, u *url.URL, orderEndpoints *order.Endpoints, bandEndpoints *band.Endpoints, wg *sync.WaitGroup, errc chan error, logger *log.Logger, debug bool) {
+func handleHTTPServer(ctx context.Context, u *url.URL, bandEndpoints *band.Endpoints, orderEndpoints *order.Endpoints, wg *sync.WaitGroup, errc chan error, logger *log.Logger, debug bool) {
 
 	// Setup goa log adapter.
 	var (
@@ -51,24 +51,24 @@ func handleHTTPServer(ctx context.Context, u *url.URL, orderEndpoints *order.End
 	// the service input and output data structures to HTTP requests and
 	// responses.
 	var (
-		orderServer *ordersvr.Server
 		bandServer  *bandsvr.Server
+		orderServer *ordersvr.Server
 	)
 	{
 		eh := errorHandler(logger)
-		orderServer = ordersvr.New(orderEndpoints, mux, dec, enc, eh, nil, nil)
 		bandServer = bandsvr.New(bandEndpoints, mux, dec, enc, eh, nil, nil)
+		orderServer = ordersvr.New(orderEndpoints, mux, dec, enc, eh, nil, nil)
 		if debug {
 			servers := goahttp.Servers{
-				orderServer,
 				bandServer,
+				orderServer,
 			}
 			servers.Use(httpmdlwr.Debug(mux, os.Stdout))
 		}
 	}
 	// Configure the mux.
-	ordersvr.Mount(mux, orderServer)
 	bandsvr.Mount(mux, bandServer)
+	ordersvr.Mount(mux, orderServer)
 
 	// Wrap the multiplexer with additional middlewares. Middlewares mounted
 	// here apply to all the service endpoints.
@@ -81,10 +81,10 @@ func handleHTTPServer(ctx context.Context, u *url.URL, orderEndpoints *order.End
 	// Start HTTP server using default configuration, change the code to
 	// configure the server as required by your service.
 	srv := &http.Server{Addr: u.Host, Handler: handler, ReadHeaderTimeout: time.Second * 60}
-	for _, m := range orderServer.Mounts {
+	for _, m := range bandServer.Mounts {
 		logger.Printf("HTTP %q mounted on %s %s", m.Method, m.Verb, m.Pattern)
 	}
-	for _, m := range bandServer.Mounts {
+	for _, m := range orderServer.Mounts {
 		logger.Printf("HTTP %q mounted on %s %s", m.Method, m.Verb, m.Pattern)
 	}
 

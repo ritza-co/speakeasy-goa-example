@@ -12,6 +12,7 @@ import (
 	"net/url"
 	"os"
 	"os/signal"
+	"strings"
 	"sync"
 	"syscall"
 )
@@ -20,10 +21,11 @@ func main() {
 	// Define command line flags, add any other flag required to configure the
 	// service.
 	var (
-		hostF     = flag.String("host", "localhost", "Server host (valid values: localhost)")
+		hostF     = flag.String("host", "dev", "Server host (valid values: dev)")
 		domainF   = flag.String("domain", "", "Host domain name (overrides host domain specified in service design)")
 		httpPortF = flag.String("http-port", "", "HTTP port (overrides host HTTP port specified in service design)")
 		grpcPortF = flag.String("grpc-port", "", "gRPC port (overrides host gRPC port specified in service design)")
+		machineF  = flag.String("machine", "localhost", "Machine IP Address")
 		secureF   = flag.Bool("secure", false, "Use secure scheme (https or grpcs)")
 		dbgF      = flag.Bool("debug", false, "Log request and response bodies")
 	)
@@ -39,23 +41,23 @@ func main() {
 
 	// Initialize the services.
 	var (
-		orderSvc order.Service
 		bandSvc  band.Service
+		orderSvc order.Service
 	)
 	{
-		orderSvc = club.NewOrder(logger)
 		bandSvc = club.NewBand(logger)
+		orderSvc = club.NewOrder(logger)
 	}
 
 	// Wrap the services in endpoints that can be invoked from other services
 	// potentially running in different processes.
 	var (
-		orderEndpoints *order.Endpoints
 		bandEndpoints  *band.Endpoints
+		orderEndpoints *order.Endpoints
 	)
 	{
-		orderEndpoints = order.NewEndpoints(orderSvc)
 		bandEndpoints = band.NewEndpoints(bandSvc)
+		orderEndpoints = order.NewEndpoints(orderSvc)
 	}
 
 	// Create channel used by both the signal handler and server goroutines
@@ -75,9 +77,10 @@ func main() {
 
 	// Start the servers and send errors (if any) to the error channel.
 	switch *hostF {
-	case "localhost":
+	case "dev":
 		{
-			addr := "http://localhost:51000"
+			addr := "http://{machine}:51000"
+			addr = strings.Replace(addr, "{machine}", *machineF, -1)
 			u, err := url.Parse(addr)
 			if err != nil {
 				logger.Fatalf("invalid URL %#v: %s\n", addr, err)
@@ -97,11 +100,12 @@ func main() {
 			} else if u.Port() == "" {
 				u.Host = net.JoinHostPort(u.Host, "80")
 			}
-			handleHTTPServer(ctx, u, orderEndpoints, bandEndpoints, &wg, errc, logger, *dbgF)
+			handleHTTPServer(ctx, u, bandEndpoints, orderEndpoints, &wg, errc, logger, *dbgF)
 		}
 
 		{
-			addr := "grpc://localhost:52000"
+			addr := "grpc://{machine}:52000"
+			addr = strings.Replace(addr, "{machine}", *machineF, -1)
 			u, err := url.Parse(addr)
 			if err != nil {
 				logger.Fatalf("invalid URL %#v: %s\n", addr, err)
@@ -121,11 +125,11 @@ func main() {
 			} else if u.Port() == "" {
 				u.Host = net.JoinHostPort(u.Host, "8080")
 			}
-			handleGRPCServer(ctx, u, orderEndpoints, bandEndpoints, &wg, errc, logger, *dbgF)
+			handleGRPCServer(ctx, u, bandEndpoints, orderEndpoints, &wg, errc, logger, *dbgF)
 		}
 
 	default:
-		logger.Fatalf("invalid host argument: %q (valid hosts: localhost)\n", *hostF)
+		logger.Fatalf("invalid host argument: %q (valid hosts: dev)\n", *hostF)
 	}
 
 	// Wait for signal.
