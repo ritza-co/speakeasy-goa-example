@@ -502,12 +502,11 @@ Review the [Speakeasy customizations](https://www.speakeasyapi.dev/docs/customiz
 
 ## Todo
 
-- check exe files into completed_app too
-- change gitignore
+- get sdk to call service without socket hang up error
+- create readme for demo repo
+- move article to speakeasy docs repo
 - asides to callouts
-- test everything
-- https://gophers.slack.com/archives/C0FK8EV28/p1697635268483699
-
+- build and view doc
 
 Stuff for Stephan:
 
