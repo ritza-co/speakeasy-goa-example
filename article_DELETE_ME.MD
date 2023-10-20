@@ -23,6 +23,7 @@ import { Callout } from '~/components';
 			- [Custom operationId](#custom-operationid)
 			- [Tags](#tags)
 			- [Extensions (custom fields)](#extensions-custom-fields)
+			- [Retry calling the server](#retry-calling-the-server)
 		- [Generate the API code with Goa](#generate-the-api-code-with-goa)
 			- [Explore the generated files](#explore-the-generated-files)
 		- [Run the server and CLI](#run-the-server-and-cli)
@@ -266,9 +267,32 @@ Method("tea", func() {
   Meta("openapi:extension:x-speakeasy-name-override", "chai")
 ```
 
+#### Retry calling the server
+
+Speakeasy provides a schema extension called [retries](https://www.speakeasyapi.dev/docs/customize-sdks/retries) that will create an SDK that automatically retries calling the server if a call fails.
+
+In `design.go` retries are enabled for the entire API, as opposed to for an individual service or method, in this code:
+
+```go
+Meta("openapi:extension:x-speakeasy-retries", `{
+	"strategy":"backoff",
+	"statusCodes": "504,408"
+}`)
+```
+
+that produces this OpenAPI yaml:
+
+```yaml
+x-speakeasy-retries:
+	statusCodes: 504,408
+	strategy: backoff
+```
+
+Note that the `Meta` function had to use JSON syntax in the value to output an extension object with sub-properties.
+
+
 TODO
 - use models instead of plain datatypes
-- Retries.
 - make schema look like Niels
 - speakeasy to work with GET tea
 - validate your schema
@@ -438,3 +462,8 @@ Review the [Speakeasy customizations](https://www.speakeasyapi.dev/docs/customiz
 pull request to update goa docs https://pkg.go.dev/goa.design/goa/dsl that I can see.Tags: Meta("openapi:operationId", "band#play2")
 OperationId: Meta("openapi:tag:Music operations")
 Extensions: Meta("openapi:extension:x-speakeasy-name-override", "chai")
+
+	Meta("openapi:extension:x-speakeasy-retries", `{
+		"strategy":"backoff",
+		"statusCodes": "504,408"
+	}`)
