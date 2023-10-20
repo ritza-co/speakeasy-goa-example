@@ -387,7 +387,7 @@ sudo chown -R $(id -u):$(id -g) .
 ```
 
 <Aside>
-While we're using TypeScript in this tutorial, Speakeasy supports all these languages: [C#, Go, Java, PHP, Python, Ruby, Swift, Typescript](/docs/create-client-sdks#language-support).
+While we're using only TypeScript in this tutorial, Speakeasy supports: [C#, Go, Java, PHP, Python, Ruby, Swift, Typescript](/docs/create-client-sdks#language-support).
 </Aside>
 
 ### Retries
