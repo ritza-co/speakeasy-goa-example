@@ -18,6 +18,7 @@ import { Callout } from '~/components';
 		- [Google's protocol buffers](#googles-protocol-buffers)
 		- [Setup Go](#setup-go)
 		- [Review the Goa design file](#review-the-goa-design-file)
+			- [References ($ref)](#references-ref)
 			- [Custom operationId](#custom-operationid)
 			- [Tags](#tags)
 			- [Extensions (custom fields)](#extensions-custom-fields)
@@ -143,7 +144,7 @@ go mod init app; # create a new Go package in this folder called app
 go install goa.design/goa/v3/cmd/goa@v3; # install Goa
 go install google.golang.org/protobuf/cmd/protoc-gen-go@latest; # install grpc
 go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest;
-export PATH=$PATH:/go/src/app/lib # add protoc to your path
+export PATH=$PATH:/go/src/app/lib; # add protoc to your path
 ```
 
 ### Review the Goa design file
@@ -215,6 +216,10 @@ var _ = Service("order", func() {
 
 Above you can see we've defined a single method, called `tea`, in the `order` service, that takes a few parameters about how you like your milk and sugar, and returns a string representing a cup of tea.
 
+#### References ($ref)
+
+Goa automatically moves complex types out of the service definition section into their own section in the schema. For example, the line `$ref: '#/components/schemas/TeaRequestBody'` refers to order specification for tea to the `components` section later in the document. This uses a JSON feature called [references](https://swagger.io/docs/specification/using-ref).
+
 #### Custom operationId
 
 If you can't find a function in the Goa documentation that corresponds to an OpenAPI field you are expecting, you can probably add it with the [`Meta`](https://pkg.go.dev/goa.design/goa/dsl#Meta) function. `Meta` will add a field and value to any object.
@@ -254,8 +259,10 @@ Method("tea", func() {
 
 TODO
 - use models instead of plain datatypes
-- Use $ref instead of inline schemas for input/output.
-- Speakeasy-specific OpenAPI extensions, for example, retries.
+- Retries.
+- make schema look like Niels
+- speakeasy to work with GET tea
+- validate your schema
 
 ### Generate the API code with Goa
 
@@ -341,7 +348,7 @@ Run the commands below in a terminal on your host machine.
 docker run --name speakbox -v ./app:/app -it alpine:3.18.4 sh
 ```
 
-In the simple Linux container called speakbox that starts, run the code below. Use your API key that you saved earlier in the last line.
+In the container called speakbox that starts, run the code below. Use your API key that you saved earlier in the last line.
 
 ```bash
 apk add curl unzip sudo; # install dependencies
@@ -379,11 +386,6 @@ Remember to give yourself permissions to the files on your host machine again:
 sudo chown -R $(id -u):$(id -g) .
 ```
 
-TODO make schema look like Niels
-TODO speakeasy to work with GET tea
-TODO validate your schema
-TODO implement niel's suggestions - explain how to make customisations
-
 <Aside>
 While we're using TypeScript in this tutorial, Speakeasy supports all these languages: [C#, Go, Java, PHP, Python, Ruby, Swift, Typescript](/docs/create-client-sdks#language-support).
 </Aside>
@@ -409,12 +411,13 @@ You can also use the Go Slack group to ask for help:
   - Log in at https://gophers.slack.com/.
   - add pull request to getting started article.
 
+- move goa go first explanation higher up, and give summary of what we are doing in the article for brand new users
 - copy everything to completed_app
 - check exe files into completed_app too
 - change gitignore
 - asides to callouts
 - test everything
-- TODO - https://gophers.slack.com/archives/C0FK8EV28/p1697635268483699
+- https://gophers.slack.com/archives/C0FK8EV28/p1697635268483699
 
 pull request to update goa docs https://pkg.go.dev/goa.design/goa/dsl that I can see.Tags: Meta("openapi:operationId", "band#play2")
 OperationId: Meta("openapi:tag:Music operations")
