@@ -51,7 +51,7 @@ var _ = Service("order", func() {
 		Result(String)
 		HTTP(func() {
 			Meta("openapi:tag:Drink operations")
-			GET("/tea")
+			POST("/tea")
 		})
 		GRPC(func() {
 		})

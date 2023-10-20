@@ -30,6 +30,7 @@ import { Callout } from '~/components';
 	- [Create the API with Speakeasy](#create-the-api-with-speakeasy)
 		- [Set up the Speakeasy CLI](#set-up-the-speakeasy-cli)
 		- [Build an SDK](#build-an-sdk)
+			- [Explore the generated files](#explore-the-generated-files-1)
 		- [Call your service with the SDK](#call-your-service-with-the-sdk)
 	- [Next steps](#next-steps)
 		- [Get help with advanced Goa](#get-help-with-advanced-goa)
@@ -126,7 +127,7 @@ cd app;
 cp completed_app/lib .; # copy protoc into your new app
 cp completed_app/design .; # copy in a simple Goa design file
 
-docker run --name gobox --volume .:/go/src/app -it golang:1.21.2 bash; # start Go in a container and share your app folder with it
+docker run --name gobox --volume .:/go/src/app --publish 51000:51000 -it golang:1.21.2 bash; # start Go in a container and share your app folder with it
 ```
 
 You now have an `app` folder ready to code in, and are inside a terminal in a Go container called `gobox` in Docker.
@@ -377,17 +378,20 @@ Speakeasy is an online-only service. Please register before continuing this tuto
 
 The CLI is the simplest way to use Speakeasy. This tutorial uses Docker, but if you want to install Speakeasy directly on your computer in the future, follow the instructions in the [readme](https://github.com/speakeasy-api/speakeasy#installation).
 
-Run the commands below in a terminal on your host machine.
+Run the commands below in a terminal on your host machine in the root of repository.
 
 ```bash
-docker run --name speakbox -v ./app:/app -it alpine:3.18.4 sh
+docker run --name speakbox -v ./app:/app --network host  -it alpine:3.18.4 sh
 ```
+
+You share your local network with the container so that it can call the club CLI server.
 
 In the container called speakbox that starts, run the code below. Use your API key that you saved earlier in the last line.
 
 ```bash
 apk add curl unzip sudo; # install dependencies
 curl -fsSL https://raw.githubusercontent.com/speakeasy-api/speakeasy/main/install.sh | sh; # install Speakeasy
+apk add nodejs npm; # install node to run the generated SDK
 
 export SPEAKEASY_API_KEY=your_api_key_here; # <-- overwrite this with your key
 ```
@@ -402,7 +406,8 @@ speakeasy help;
 If you exit the container and want to return to it later, run:
 
 ```bash
-docker start speakbox; docker exec -it speakbox sh;
+docker start speakbox;
+docker exec -it speakbox sh;
 ```
 
 </Aside>
@@ -414,27 +419,69 @@ You now have `app/gen/http/openapi3.yaml` and Speakeasy. So you can build the SD
 speakeasy generate sdk --schema /app/gen/http/openapi3.yaml --lang typescript --out /app/sdk
 ```
 
+The output should be:
+
+```bash
+Authenticated with workspace successfully - https://app.speakeasyapi.dev/workspaces/
+Generating SDK for typescript...
+INFO	operation valid	{"operation":"band#/openapi.json","type":"paths"}
+INFO	operation valid	{"operation":"band#play","type":"paths"}
+INFO	operation valid	{"operation":"order#tea","type":"paths"}
+Generating SDK for typescript... done ✓.
+For more docs on customising the SDK check out: https://www.speakeasyapi.dev/docs/customize-sdks
+```
+
 Remember to give yourself permissions to the files on your host machine again:
 
 ```bash
 sudo chown -R $(id -u):$(id -g) .
 ```
 
-TODO
-- speakeasy to work with GET tea
-- make schema look like Niels
-- use models instead of plain datatypes
-- validate your schema
-
-
 <Aside>
-While you're using only TypeScript in this tutorial, Speakeasy supports: [C#, Go, Java, PHP, Python, Ruby, Swift, Typescript](/docs/create-client-sdks#language-support).
+While you're using only TypeScript in this tutorial, Speakeasy supports: [C#, Go, Java, PHP, Python, Ruby, Swift, and Typescript](/docs/create-client-sdks#language-support).
 </Aside>
 
+#### Explore the generated files
+
+Speakeasy created the `sdk` folder. In root of the folder are various npm files. Importantly, the `package.json` file lists all dependencies you need to install before being able to run the SDK. The `docs` folder contains your SDK's documentation in Markdown files. The `src` folder contains the SDK code.
+
 ### Call your service with the SDK
-todo
+You're going to implement the documentation example in `sdk/docs/sdks/drinkoperations/README.md`.
+
+Make a file called `test.js` in the `app/sdk` folder. Insert the code below.
+
+```js
+const SDK = require("./dist/index");
+
+(async() => {
+  const sdk = new SDK.SDK();
+
+  const res = await sdk.drinkOperations.orderNumberTea({
+    includeMilk: true,
+    isGreen: false,
+    numberSugars: 1584355970564842800,
+  });
+
+  if (res.statusCode == 200) {
+    'A nice cup of tea'
+  }
+})();
+```
+
+In the speakbox container (that has Node.js installed), install the NPM dependencies, and run the test file.
+
+```bash
+cd /app/sdk;
+npm install;
+npx tsc --build;
+node test.js;
+```
+
+You should see in gobox container, where your `club` server is still running, that the server receives a request. In the speakbox container you should see it receive a reply.
 
 ## Next steps
+
+You now know how to make an OpenAPI compliant web service from a Goa design specification and how to generate SDKs for it using Speakeay. Well done!
 
 ### Get help with advanced Goa
 If you want to build a more complex API and need help understanding Goa, read the full [design language specification](https://pkg.go.dev/goa.design/goa/dsl).
@@ -479,3 +526,20 @@ Extensions: Meta("openapi:extension:x-speakeasy-name-override", "chai")
 		"strategy":"backoff",
 		"statusCodes": "504,408"
 	}`)
+
+
+GET not allowed with function bodies
+```go
+	Method("multiply", func() {
+		Payload(func() {
+			Field(1, "a", Int, "Left operand")
+			Field(2, "b", Int, "Right operand")
+			Required("a", "b")
+		})
+
+		Result(Int)
+
+		HTTP(func() {
+			GET("/multiply/{a}/{b}")
+		})
+```
