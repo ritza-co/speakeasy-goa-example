@@ -295,13 +295,6 @@ x-speakeasy-retries:
 
 Note that the `Meta` function had to use JSON syntax in the value to output an extension object with sub-properties.
 
-
-TODO
-- speakeasy to work with GET tea
-- make schema look like Niels
-- use models instead of plain datatypes
-- validate your schema
-
 ### Generate the API code with Goa
 
 Generate the client and server code, and your OpenAPI schema from your design file, by running the commands below in the gobox container.
@@ -344,6 +337,8 @@ The following files and folders are created by `goa example`. They are a startin
 - `/cmd/club-cli` — A Go package containing a CLI tool that you can compile and call from the terminal to make requests to the server above.
 - `band.go` — A placeholder implementation of your service. You can write your actual business logic here. You might think this file belongs in the `/cmd/club` folder with the API implementation, instead of in the root of the project.
 
+Take a little time to review `/gen/http/openapi3.yaml` and see how your `design.go` functions map to the generated YAML.
+
 ### Run the server and CLI
 
 Goa has given us a simple, but working client and server implementation. Let's compile and test them before starting with Speakeasy.
@@ -371,6 +366,12 @@ In another terminal on your host, call the server using the CLI:
 ```
 
 While the CLI won't receive a response from the server because the implementation is just a placeholder, you can see in the server terminal that it has been successfully called. Stop the server by pushing <kbd>Ctrl+C</kbd> in the terminal window.
+
+TODO
+- speakeasy to work with GET tea
+- make schema look like Niels
+- use models instead of plain datatypes
+- validate your schema
 
 ## Create the API with Speakeasy
 
