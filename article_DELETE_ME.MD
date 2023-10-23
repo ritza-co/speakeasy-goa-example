@@ -35,7 +35,6 @@ import { Callout } from '~/components';
 	- [Next steps](#next-steps)
 		- [Get help with advanced Goa](#get-help-with-advanced-goa)
 		- [Use Speakeasy customizations](#use-speakeasy-customizations)
-	- [Todo](#todo)
 
 # Generate SDKs with Goa
 
@@ -487,29 +486,3 @@ But one of the fastest ways to find out how to do something, especially when usi
 ### Use Speakeasy customizations
 
 Review the [Speakeasy customizations](https://www.speakeasyapi.dev/docs/customize-sdks) to see if adding any would make your service more understandable or usable.
-
-
-## Todo
-
-- create readme for demo repo
-- move article to speakeasy docs repo
-- asides to callouts
-- build and view doc
-
-Stuff for Stephan:
-
-- review https://github.com/speakeasy-api/speakeasy
-- https://github.com/goadesign/goa/issues/3390
-  - Include link to - https://invite.slack.golangbridge.org/
-  - Register for the group at https://invite.slack.golangbridge.org/.
-  - Log in at https://gophers.slack.com/.
-  - add pull request to getting started article.
-
-pull request to update goa docs https://pkg.go.dev/goa.design/goa/dsl that I can see.Tags: Meta("openapi:operationId", "band#play2")
-OperationId: Meta("openapi:tag:Music operations")
-Extensions: Meta("openapi:extension:x-speakeasy-name-override", "chai")
-
-	Meta("openapi:extension:x-speakeasy-retries", `{
-		"strategy":"backoff",
-		"statusCodes": "504,408"
-	}`)
