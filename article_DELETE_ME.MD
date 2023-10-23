@@ -118,16 +118,15 @@ To use more recent versions of `protoc` in future applications you write, downlo
 
 ### Set up Go
 
-In a terminal inside the `speakeasy-goa-example` folder, run the commands below. Comments in the commands explain what they do.
+First set up your environment. You're going to run a Go Docker container, and later install Node.js inside it too. In a terminal inside the `speakeasy-goa-example` folder, run the commands below. Comments in the commands explain what they do.
 
 ```bash
-cd /go/src;
 mkdir app;
 cd app;
-cp completed_app/lib .; # copy protoc into your new app
-cp completed_app/design .; # copy in a simple Goa design file
+cp -r ../completed_app/lib .; # copy protoc into your new app
+cp -r ../completed_app/design .; # copy in a simple Goa design file
 
-docker run --name gobox --volume .:/go/src/app --publish 51000:51000 -it golang:1.21.2 bash; # start Go in a container and share your app folder with it
+docker run --name gobox --volume .:/go/src/app -it golang:1.21.2 bash; # start Go in a container and share your app folder with it
 ```
 
 You now have an `app` folder ready to code in, and are inside a terminal in a Go container called `gobox` in Docker.
@@ -138,8 +137,8 @@ If you leave this tutorial and return later, you can start the container and att
 ```bash
 docker start gobox;
 docker exec -it gobox bash;
-cd /go/src/app;
 export PATH=$PATH:/go/src/app/lib;
+cd /go/src/app;
 ```
 
 If you need to delete the container and start over, run:
@@ -153,7 +152,7 @@ docker rm gobox;
 Run the following commands inside the gobox terminal.
 
 ```bash
-cd src/app;
+cd /go/src/app;
 go mod init app; # create a new Go package in this folder called app
 go install goa.design/goa/v3/cmd/goa@v3; # install Goa
 go install google.golang.org/protobuf/cmd/protoc-gen-go@latest; # install grpc
@@ -348,21 +347,15 @@ Take a little time to review `/gen/http/openapi3.yaml` and see how your `design.
 
 Goa has given us a simple, but working client and server implementation. Let's compile and test them before starting with Speakeasy.
 
-Run the code below in the gobox container.
+Run the code below in the container.
 
 ```bash
 go get app/cmd/club; # download dependencies
-go build ./cmd/club && go build ./cmd/club-cli;
+go build ./cmd/club && go build ./cmd/club-cli; # build the server
+./club; # start the server
 ```
 
-You now have two executable files in the `app` folder, called `club` and `club-cli`.
-
-Run the Club server in a terminal on your host machine:
-```bash
-./club
-```
-
-The output should be:
+You now have two executable files in the `app` folder, called `club` and `club-cli`. The Club server is running inside Docker.
 
 ```bash
 [club] 16:20:55 HTTP "Play" mounted on POST /play
@@ -375,15 +368,17 @@ The output should be:
 [club] 16:20:55 gRPC server listening on "localhost:52000"
 ```
 
-In another terminal on your host, call the server using the CLI:
+Open another terminal on your host machine, and log into a new Docker terminal:
 
 ```bash
-./club-cli --help;
+docker exec -it gobox bash;
+cd /go/src/app;
+./club-cli --help; # see if you can call the server from a CLI client
 ./club-cli order tea --body '{"includeMilk": false, "isGreen": false, "numberSugars": 1 }';
 ./club-cli band play --body '{"style": "Bebop" }';
 ```
 
-While the CLI won't receive a response from the server because the implementation is just a placeholder, you can see in the server terminal that it has been successfully called. Stop the server by pushing <kbd>Ctrl+C</kbd> in the terminal window.
+While the CLI won't receive a response from the server because the implementation is just a placeholder, you can see in the server terminal that it has been successfully called.
 
 ## Create the API with Speakeasy
 
@@ -393,21 +388,12 @@ Speakeasy is an online-only service. Please register before continuing this tuto
 
 The CLI is the simplest way to use Speakeasy. This tutorial uses Docker, but if you want to install Speakeasy directly on your computer in the future, follow the instructions in the [readme](https://github.com/speakeasy-api/speakeasy#installation).
 
-Run the commands below in a terminal on your host machine in the root of repository.
+Run the commands below in the second terminal to gobox that you were just working in. Use your API key that you saved earlier in the last line.
 
 ```bash
-docker run --name speakbox -v ./app:/app --network host  -it alpine:3.18.4 sh
-```
-
-You share your local network with the container so that it can call the club CLI server.
-
-In the container called speakbox that starts, run the code below. Use your API key that you saved earlier in the last line.
-
-```bash
-apk add curl unzip sudo; # install dependencies
+apt update;
+apt install -y curl unzip sudo nodejs npm; # install dependencies
 curl -fsSL https://raw.githubusercontent.com/speakeasy-api/speakeasy/main/install.sh | sh; # install Speakeasy
-apk add nodejs npm; # install node to run the generated SDK
-
 export SPEAKEASY_API_KEY=your_api_key_here; # <-- overwrite this with your key
 ```
 
@@ -417,22 +403,11 @@ Now Speakeasy is installed in the container. Test it by running:
 speakeasy help;
 ```
 
-<Aside>
-If you exit the container and want to return to it later, run:
-
-```bash
-docker start speakbox;
-docker exec -it speakbox sh;
-cd app;
-```
-
-</Aside>
-
 ### Build an SDK
-You now have `app/gen/http/openapi3.yaml` and Speakeasy. So you can build the SDK. In the speakbox container terminal, run:
+You now have `app/gen/http/openapi3.yaml` and Speakeasy. So you can build the SDK. In the container terminal, run:
 
 ```bash
-speakeasy generate sdk --schema /app/gen/http/openapi3.yaml --lang typescript --out /app/sdk
+speakeasy generate sdk --schema /go/src/app/gen/http/openapi3.yaml --lang typescript --out /go/src/app/sdk
 ```
 
 The output should be:
@@ -447,7 +422,7 @@ Generating SDK for typescript... done ✓.
 For more docs on customising the SDK check out: https://www.speakeasyapi.dev/docs/customize-sdks
 ```
 
-Remember to give yourself permissions to the files on your host machine again:
+Remember to give yourself permissions to the files on your host machine in another terminal:
 
 ```bash
 sudo chown -R $(id -u):$(id -g) .
@@ -484,20 +459,20 @@ const SDK = require("./dist/index");
 })();
 ```
 
-In the speakbox container (that has Node.js installed), install the NPM dependencies, and run the test file.
+In the container terminal, install the NPM dependencies, and run the test file.
 
 ```bash
-cd /app/sdk;
+cd /go/src/app/sdk;
 npm install;
 npx tsc --build;
 node test.js;
 ```
 
-You should see in gobox container, where your `club` server is still running, that the server receives a request. In the speakbox container you should see it receive a reply.
+You should see in first terminal, where your `club` server is still running, that the server receives a request. In the second terminal you should see it receive `A nice cup of tea`.
 
 ## Next steps
 
-You now know how to make an OpenAPI compliant web service from a Goa design specification and how to generate SDKs for it using Speakeay. Well done!
+You now know how to make an OpenAPI compliant web service from a Goa design specification and how to generate SDKs for it using Speakeasy. Well done!
 
 ### Get help with advanced Goa
 If you want to build a more complex API and need help understanding Goa, read the full [design language specification](https://pkg.go.dev/goa.design/goa/dsl).
@@ -516,7 +491,6 @@ Review the [Speakeasy customizations](https://www.speakeasyapi.dev/docs/customiz
 
 ## Todo
 
-- get sdk to call service without socket hang up error
 - create readme for demo repo
 - move article to speakeasy docs repo
 - asides to callouts

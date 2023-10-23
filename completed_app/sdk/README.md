@@ -4,16 +4,24 @@
     <a href="https://speakeasyapi.dev/"><img src="https://custom-icon-badges.demolab.com/badge/-Built%20By%20Speakeasy-212015?style=for-the-badge&logoColor=FBE331&logo=speakeasy&labelColor=545454" /></a>
 </div>
 
-<!-- Start SDK Installation -->
-## SDK Installation
 
-### NPM
+## 🏗 **Welcome to your new SDK!** 🏗
+
+It has been generated successfully based on your OpenAPI spec. However, it is not yet ready for production use. Here are some next steps:
+- [ ] 🛠 Make your SDK feel handcrafted by [customizing it](https://www.speakeasyapi.dev/docs/customize-sdks)
+- [ ] ♻️ Refine your SDK quickly by iterating locally with the [Speakeasy CLI](https://github.com/speakeasy-api/speakeasy)
+- [ ] 🎁 Publish your SDK to package managers by [configuring automatic publishing](https://www.speakeasyapi.dev/docs/productionize-sdks/publish-sdks)
+- [ ] ✨ When ready to productionize, delete this section from the README
+<!-- Start SDK Installation -->
+# SDK Installation
+
+## NPM
 
 ```bash
 npm add <UNSET>
 ```
 
-### Yarn
+## Yarn
 
 ```bash
 yarn add <UNSET>
@@ -22,6 +30,8 @@ yarn add <UNSET>
 
 ## SDK Example Usage
 <!-- Start SDK Example Usage -->
+
+
 ```typescript
 import { SDK } from "openapi";
 
@@ -43,23 +53,25 @@ import { SDK } from "openapi";
 <!-- End SDK Example Usage -->
 
 <!-- Start SDK Available Operations -->
-## Available Resources and Operations
+# Available Resources and Operations
 
 
-### [drinkOperations](docs/sdks/drinkoperations/README.md)
+## [drinkOperations](docs/sdks/drinkoperations/README.md)
 
 * [orderNumberTea](docs/sdks/drinkoperations/README.md#ordernumbertea) - tea order
 
-### [musicOperations](docs/sdks/musicoperations/README.md)
+## [musicOperations](docs/sdks/musicoperations/README.md)
 
 * [bandNumberPlay](docs/sdks/musicoperations/README.md#bandnumberplay) - play band
 
-### [band](docs/sdks/band/README.md)
+## [band](docs/sdks/band/README.md)
 
 * [bandNumberOpenapiJson](docs/sdks/band/README.md#bandnumberopenapijson) - Download ./gen/http/openapi.json
 <!-- End SDK Available Operations -->
 
 <!-- Start Dev Containers -->
+
+
 
 <!-- End Dev Containers -->
 

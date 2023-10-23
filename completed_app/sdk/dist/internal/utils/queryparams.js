@@ -104,7 +104,8 @@ function noExplodeSerializer(params, delimiter) {
                 var qpDecorator = (0, utils_1.parseParamDecorator)(qpAnn, paramKey, "form", true);
                 if (qpDecorator == null)
                     return;
-                return "".concat(paramKey).concat(delimiter).concat((0, utils_1.valToString)(value[paramKey]));
+                var key = qpDecorator.ParamName || paramKey;
+                return "".concat(key).concat(delimiter).concat((0, utils_1.valToString)(value[paramKey]));
             })
                 .join(delimiter);
             query.push("".concat(key, "=").concat(encodeURIComponent(values)));
@@ -133,7 +134,8 @@ function formSerializerExplode(params) {
                 var qpDecorator = (0, utils_1.parseParamDecorator)(qpAnn, paramKey, "form", true);
                 if (qpDecorator == null)
                     return;
-                return "".concat(paramKey, "=").concat(encodeURIComponent((0, utils_1.valToString)(value[paramKey])));
+                var key = qpDecorator.ParamName || paramKey;
+                return "".concat(key, "=").concat(encodeURIComponent((0, utils_1.valToString)(value[paramKey])));
             })
                 .join("&"));
     });

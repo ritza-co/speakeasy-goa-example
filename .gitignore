@@ -1,9 +1,6 @@
 # Application files
 app/**/**
-!app/design/design.go
 !app/lib
-!app/go.mod
-!app/go.sum
 
 # Compiled Object files, Static and Dynamic libraries (Unix-like)
 *.o

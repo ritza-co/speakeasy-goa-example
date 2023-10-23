@@ -25,8 +25,8 @@ var SDKConfiguration = /** @class */ (function () {
         this.language = "typescript";
         this.openapiDocVersion = "1.0.0";
         this.sdkVersion = "0.0.1";
-        this.genVersion = "2.155.1";
-        this.userAgent = "speakeasy-sdk/typescript 0.0.1 2.155.1 1.0.0 openapi";
+        this.genVersion = "2.169.0";
+        this.userAgent = "speakeasy-sdk/typescript 0.0.1 2.169.0 1.0.0 openapi";
         Object.assign(this, init);
     }
     return SDKConfiguration;

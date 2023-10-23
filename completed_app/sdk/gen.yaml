@@ -4,12 +4,12 @@ generation:
   singleTagPerOp: false
 features:
   typescript:
-    core: 2.90.4
+    core: 2.93.0
     globalServerURLs: 2.82.0
 typescript:
   version: 0.0.1
   author: Speakeasy
   clientServerStatusCodesAsErrors: true
   flattenGlobalSecurity: true
-  maxMethodParams: 0
+  maxMethodParams: 4
   packageName: openapi
