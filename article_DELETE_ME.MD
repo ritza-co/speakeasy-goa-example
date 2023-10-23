@@ -355,7 +355,7 @@ go build ./cmd/club && go build ./cmd/club-cli; # build the server
 ./club; # start the server
 ```
 
-You now have two executable files in the `app` folder, called `club` and `club-cli`. The Club server is running inside Docker.
+You now have two executable files in the `app` folder, called `club` and `club-cli`. The Club server is running inside Docker. The output should look like:
 
 ```bash
 [club] 16:20:55 HTTP "Play" mounted on POST /play
@@ -513,20 +513,3 @@ Extensions: Meta("openapi:extension:x-speakeasy-name-override", "chai")
 		"strategy":"backoff",
 		"statusCodes": "504,408"
 	}`)
-
-
-GET not allowed with function bodies
-```go
-	Method("multiply", func() {
-		Payload(func() {
-			Field(1, "a", Int, "Left operand")
-			Field(2, "b", Int, "Right operand")
-			Required("a", "b")
-		})
-
-		Result(Int)
-
-		HTTP(func() {
-			GET("/multiply/{a}/{b}")
-		})
-```

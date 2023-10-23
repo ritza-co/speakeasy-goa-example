@@ -7,70 +7,70 @@
 
 </div>
 
-This example Goa app demonstrates Speakeasy-recommended practices for generating clear OpenAPI specifications and SDKs.
+This example Goa app demonstrates Speakeasy - recommended practices for generating clear OpenAPI specifications and SDKs.
+
+It's part of a complete tutorial available on the [Speakeasy documentation site](https://www.speakeasyapi.dev/docs).
 
 ## Prerequisites
 
-You need to have Node.js and Yarn installed on your system to run this project. If you don't have these installed, you can download them from [here](https://nodejs.org/) and [here](https://yarnpkg.com/).
+You need to have Docker version 20 or later to run this project.
 
-To generate an SDK, you'll also need the Speakeasy CLI installed, or use the Speakeasy dashboard.
+## Run the app
 
-## Installation
+Clone, or download and unzip, the repository:
 
-To install the application on your local machine:
-
-1. Clone the repository:
 ```bash
-git clone https://github.com/ritza-co/speakeasy-bar-tsoa.git
+git clone https://github.com/ritza-co/speakeasy-goa-example.git
 ```
 
-2. Navigate into the directory:
+Run it:
+
 ```bash
-cd speakeasy-bar-tsoa
+cd speakeasy-goa-example
+cd completed_app;
+docker run --name gobox --volume .:/go/src/app -it golang:1.21.2 bash; # start a docker container
+cd /go/src/app; # now inside the container
+go install goa.design/goa/v3/cmd/goa@v3; # install Goa
+go install google.golang.org/protobuf/cmd/protoc-gen-go@latest; # install grpc
+go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest;
+export PATH=$PATH:/go/src/app/lib; # add protoc to your path
+go get app/cmd/club; # download dependencies
+./club; # start the server
 ```
 
-3. Install all dependencies for the application using Yarn:
+The Club server is running inside Docker.
+
+Open another terminal on your host machine, and log into a new Docker terminal:
+
 ```bash
-yarn install
+docker exec -it gobox bash;
+cd /go/src/app;
+./club-cli --help; # see if you can call the server from a CLI client
+./club-cli order tea --body '{"includeMilk": false, "isGreen": false, "numberSugars": 1 }';
+./club-cli band play --body '{"style": "Bebop" }';
 ```
 
-4. [Install Speakeasy CLI](https://github.com/speakeasy-api/speakeasy#installation):
+While the CLI won't receive a response from the server because the implementation is just a placeholder, you can see in the server terminal that it has been successfully called.
+
+Speakeasy is an online-only service. Please register before continuing, at https://app.speakeasyapi.dev. Once you've registered, create a workspace named `club`. Browse to API keys. Click `New Api Key`. Name it `club`. Copy and save the key content to use later.
+
+Run the commands below in the second terminal to gobox that you were just working in. Use your API key that you saved earlier.
+
 ```bash
-brew install speakeasy-api/homebrew-tap/speakeasy
+apt update;
+apt install -y curl unzip sudo nodejs npm; # install dependencies
+curl -fsSL https://raw.githubusercontent.com/speakeasy-api/speakeasy/main/install.sh | sh; # install Speakeasy
+export SPEAKEASY_API_KEY=your_api_key_here; # <-- overwrite this with your key
+cd /go/src/app/sdk;
+node test.js;
 ```
 
-## Running the application
+You should see in first terminal, where your `club` server is still running, that the server receives a request. In the second terminal you should see it receive `A nice cup of tea`.
 
-1. Compile the TypeScript files:
-```bash
-yarn build
-```
-
-2. Start the server:
-```bash
-yarn start
-```
-
-### For development
-
-You can use the provided script to run the application in development mode. It will watch for any changes in the source code and automatically restart the server and update the routes and OpenAPI definition.
+To give yourself permissions to the files on your host machine, run:
 
 ```bash
-yarn dev
-```
-
-### Working with the OpenAPI specification
-
-If you want to have a separate OpenAPI specification file in YAML format, run:
-
-```bash
-yarn spec
-```
-
-Additionally, you can generate both the specification file and a TypeScript SDK for your API using:
-
-```bash
-yarn spec-and-sdk
+sudo chown -R $(id -u):$(id -g) .
 ```
 
 ## License
