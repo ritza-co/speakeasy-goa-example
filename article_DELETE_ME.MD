@@ -423,6 +423,7 @@ If you exit the container and want to return to it later, run:
 ```bash
 docker start speakbox;
 docker exec -it speakbox sh;
+cd app;
 ```
 
 </Aside>
@@ -478,7 +479,7 @@ const SDK = require("./dist/index");
   });
 
   if (res.statusCode == 200) {
-    'A nice cup of tea'
+    console.log('A nice cup of tea');
   }
 })();
 ```

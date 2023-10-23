@@ -10,6 +10,6 @@ const SDK = require("./dist/index");
   });
 
   if (res.statusCode == 200) {
-    'A nice cup of tea'
+    console.log('A nice cup of tea');
   }
 })();
